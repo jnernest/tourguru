@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { discoveryLine } from './src/guide/discovery';
 import type { GuideSnapshot } from './src/guide/guideController';
 import { AI_NARRATION_ENABLED, OFFLINE_TRANSLATION_AVAILABLE, useGuide } from './src/guide/useGuide';
 import type { LanguageCode } from './src/i18n/languages';
 import { LanguagePicker } from './src/ui/LanguagePicker';
 import { NearbyList } from './src/ui/NearbyList';
 import { NowPlayingCard } from './src/ui/NowPlayingCard';
+import { RouteCard } from './src/ui/RouteCard';
 import { colors } from './src/ui/theme';
 
 function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
@@ -46,16 +48,38 @@ function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
           <Text style={styles.secondaryText}>Reset history</Text>
         </Pressable>
       </View>
-      {guide.walking ? (
-        <Pressable accessibilityRole="button" onPress={() => guide.tellAbout()} style={styles.simulate}>
-          <Text style={styles.secondaryText}>🔊 What’s around me?</Text>
-        </Pressable>
-      ) : (
-        <Pressable accessibilityRole="button" onPress={guide.startSimulated} style={styles.simulate}>
-          <Text style={styles.secondaryText}>▶ Simulate a walk (Munich old town)</Text>
+      <WalkTools guide={guide} />
+      {guide.route && (
+        <RouteCard plan={guide.route} position={guide.snapshot.position} isTold={guide.isTold} onEnd={guide.endWalk} />
+      )}
+      {guide.snapshot.badge && <Text style={styles.badge}>🏅 New badge: {guide.snapshot.badge}!</Text>}
+      {guide.walking && <Text style={styles.notice}>{gpsStatus(guide.snapshot)}</Text>}
+      <Text style={styles.notice}>
+        {discoveryLine(guide.snapshot.discoveredTotal, guide.snapshot.discoveredIds.length, guide.snapshot.nearby.length)}
+      </Text>
+    </View>
+  );
+}
+
+/** While walking: ask about surroundings or get a suggested route. Otherwise: the demo walk. */
+function WalkTools({ guide }: { guide: ReturnType<typeof useGuide> }) {
+  if (!guide.walking) {
+    return (
+      <Pressable accessibilityRole="button" onPress={guide.startSimulated} style={styles.simulate}>
+        <Text style={styles.secondaryText}>▶ Simulate a walk (Munich old town)</Text>
+      </Pressable>
+    );
+  }
+  return (
+    <View style={styles.tools}>
+      <Pressable accessibilityRole="button" onPress={() => guide.tellAbout()} style={[styles.simulate, styles.tool]}>
+        <Text style={styles.secondaryText}>🔊 What’s around me?</Text>
+      </Pressable>
+      {!guide.route && (
+        <Pressable accessibilityRole="button" onPress={guide.planWalk} style={[styles.simulate, styles.tool]}>
+          <Text style={styles.secondaryText}>🗺 Suggest a walk</Text>
         </Pressable>
       )}
-      {guide.walking && <Text style={styles.notice}>{gpsStatus(guide.snapshot)}</Text>}
     </View>
   );
 }
@@ -72,6 +96,7 @@ function GuideScreen() {
         items={guide.snapshot.nearby}
         lang={lang}
         onSelect={guide.tellAbout}
+        discoveredIds={guide.snapshot.discoveredIds}
         header={<GuideHeader guide={guide} />}
       />
       <Text style={styles.shareLog} onPress={guide.shareLog} accessibilityRole="button">
@@ -128,6 +153,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.border,
+  },
+  tools: { flexDirection: 'row', marginHorizontal: 16, gap: 8 },
+  tool: { flex: 1, marginHorizontal: 0 },
+  badge: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#FFF4D6',
+    color: colors.text,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   shareLog: {
     textAlign: 'center',

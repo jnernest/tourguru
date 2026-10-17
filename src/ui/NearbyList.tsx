@@ -13,13 +13,16 @@ interface Props {
   onSelect: (poiId: string) => void;
   /** Content above the list (the now-playing card, controls); scrolls with it as one page. */
   header?: ReactElement;
+  /** Places already heard: shown with a ✓. */
+  discoveredIds: string[];
 }
 
 function formatDistance(m: number): string {
   return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`;
 }
 
-export function NearbyList({ items, lang, onSelect, header }: Props) {
+export function NearbyList({ items, lang, onSelect, header, discoveredIds }: Props) {
+  const discovered = new Set(discoveredIds);
   return (
     <FlatList
       data={items}
@@ -37,7 +40,8 @@ export function NearbyList({ items, lang, onSelect, header }: Props) {
           style={({ pressed }) => [styles.row, pressed && styles.pressed]}
         >
           <PlaceImage image={item.poi.image} title={item.poi.title} style={styles.thumb} />
-          <Text style={styles.title} numberOfLines={2}>
+          <Text style={[styles.title, discovered.has(item.poi.id) && styles.heard]} numberOfLines={2}>
+            {discovered.has(item.poi.id) ? '✓ ' : ''}
             {item.poi.title}
           </Text>
           <Text style={styles.meta}>
@@ -66,5 +70,6 @@ const styles = StyleSheet.create({
   pressed: { backgroundColor: colors.surface },
   thumb: { width: 52, height: 52, borderRadius: 8 },
   title: { flex: 1, color: colors.text },
+  heard: { color: colors.muted },
   meta: { color: colors.muted },
 });

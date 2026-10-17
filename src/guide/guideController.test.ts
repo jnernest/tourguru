@@ -178,6 +178,20 @@ describe('GuideController', () => {
     expect(t.controller.state.current?.id).toBe('museum');
   });
 
+  it('tracks discoveries around the user and awards the first badge', async () => {
+    const t = setup([poiNorth('a', 10), poiNorth('b', 300)]);
+    await t.settleAt(0);
+    expect(t.controller.state).toMatchObject({
+      discoveredIds: ['a'],
+      discoveredTotal: 1,
+      badge: 'First discovery',
+      position: expect.objectContaining({ lat: expect.any(Number) }),
+    });
+    await t.controller.tellAbout('b');
+    expect(t.controller.state).toMatchObject({ discoveredTotal: 2, badge: null });
+    expect(t.controller.state.discoveredIds.sort()).toEqual(['a', 'b']);
+  });
+
   it('skip stops the speaker', async () => {
     const t = setup([]);
     await t.controller.skip();

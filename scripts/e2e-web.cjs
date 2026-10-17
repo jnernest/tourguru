@@ -68,6 +68,13 @@ async function main() {
     );
     const title = await page.locator('[data-testid="narration"]').locator('xpath=preceding-sibling::*[1]').textContent();
     console.log(`✔ narrated "${title}":\n    ${(await narration.textContent()).slice(0, 300)}`);
+
+    await page.getByText('Suggest a walk', { exact: false }).click();
+    await page.getByText(/Your walk · \d+ stops/).waitFor({ timeout: 10_000 });
+    console.log(`✔ walk planned: ${(await page.getByText(/Your walk · \d+ stops/).textContent()).trim()}`);
+    console.log(`    ${(await page.getByText(/^Next: /).textContent()).trim()}`);
+    await page.getByText('Open in Google Maps').waitFor({ timeout: 5_000 });
+    console.log(`✔ discovery: ${(await page.getByText(/in total/).first().textContent()).trim()}`);
     await page.screenshot({ path: SCREENSHOT, fullPage: true });
     console.log(`✔ screenshot: ${SCREENSHOT}`);
     if (pageErrors.length) throw new Error(`page error during walk: ${pageErrors[0]}`);

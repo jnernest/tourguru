@@ -7,6 +7,7 @@ import { rankPois, type RankedPoi } from '../pois/poiRanker';
 import type { Poi, PoiSource } from '../pois/types';
 import type { ToldStore } from '../storage/toldStore';
 import type { Speaker } from '../voice/speaker';
+import { badgeEarned } from './discovery';
 import { selectCandidate, StabilityGate } from './trigger';
 
 export const FETCH_RADIUS_M = 500;
@@ -30,6 +31,14 @@ export interface GuideSnapshot {
   gpsAccuracyM: number | null;
   /** True when the latest fix was too imprecise to use. */
   gpsWeak: boolean;
+  /** Latest usable fix, for route guidance. */
+  position: Fix | null;
+  /** Ids of nearby places already heard (✓ in the list). */
+  discoveredIds: string[];
+  /** Places heard about in total, across walks. */
+  discoveredTotal: number;
+  /** Badge earned by the latest narration, until the next one. */
+  badge: string | null;
   error: string | null;
 }
 
@@ -40,6 +49,10 @@ export const INITIAL_SNAPSHOT: GuideSnapshot = {
   narration: null,
   gpsAccuracyM: null,
   gpsWeak: false,
+  position: null,
+  discoveredIds: [],
+  discoveredTotal: 0,
+  badge: null,
   error: null,
 };
 
@@ -92,7 +105,7 @@ export class GuideController {
     try {
       await this.refreshPoisIfNeeded(fix);
       const ranked = rankPois(this.pois, fix, FETCH_RADIUS_M);
-      this.update({ nearby: ranked });
+      this.update({ nearby: ranked, position: fix, ...this.discovery(ranked) });
       const standingStill = fix.heading === null;
       const speakable = this.deps.canTranslate ? ranked : ranked.filter((r) => r.poi.lang === this.lang);
       const candidate = selectCandidate(speakable, (id) => this.deps.told.has(id), standingStill);
@@ -150,6 +163,22 @@ export class GuideController {
   }
 
   /** Resolves once any in-flight narration has finished. */
+  isTold(poiId: string): boolean {
+    return this.deps.told.has(poiId);
+  }
+
+  /** Re-reads discovery state, e.g. after the history was reset. */
+  refreshDiscovery(): void {
+    this.update({ ...this.discovery(this.snapshot.nearby), badge: null });
+  }
+
+  private discovery(nearby: RankedPoi[]): Pick<GuideSnapshot, 'discoveredIds' | 'discoveredTotal'> {
+    return {
+      discoveredIds: nearby.filter((r) => this.deps.told.has(r.poi.id)).map((r) => r.poi.id),
+      discoveredTotal: this.deps.told.count(),
+    };
+  }
+
   whenIdle(): Promise<void> {
     return this.narration;
   }
@@ -187,11 +216,20 @@ export class GuideController {
     };
   }
 
+  /** Records the place as heard and announces a badge if this discovery earned one. */
+  private async markDiscovered(poi: Poi): Promise<void> {
+    const before = this.deps.told.count();
+    await this.deps.told.add(poi.id, this.deps.now());
+    const badge = badgeEarned(before, this.deps.told.count());
+    if (badge) log('info', `Badge earned: ${badge}`);
+    this.update({ ...this.discovery(this.snapshot.nearby), badge });
+  }
+
   private async narrate(poi: Poi): Promise<void> {
     this.update({ status: 'narrating', current: poi, narration: null });
     log('info', `Narrating "${poi.title}" [${poi.lang}→${this.lang}]`);
     try {
-      await this.deps.told.add(poi.id, this.deps.now());
+      await this.markDiscovered(poi);
       const text = await this.deps.engine.narrate(poi, this.lang, this.contextFor(poi));
       this.update({ narration: text });
       const outcome = await this.deps.speaker.speak(text, LANGUAGES[this.lang].ttsLocale);

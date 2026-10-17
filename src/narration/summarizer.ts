@@ -1,4 +1,5 @@
 import { contentWords, splitSentences, stripParentheticals } from '../text/sentences';
+import { storyBonus } from '../text/storyCues';
 
 /** Roughly 30–40 s of speech. */
 export const TARGET_CHARS = 450;
@@ -39,7 +40,8 @@ function scoreSentence(sentence: string, index: number, freq: Map<string, number
   const position = 1 / (1 + index * 0.1);
   // Short fragments ("Fishponds were also excavated.") carry little; they win only if nothing else does.
   const substance = Math.min(1, sentence.length / FULL_WEIGHT_CHARS);
-  return centrality * mentionsPlace * position * substance;
+  // Legends, records and anecdotes are what visitors remember; dry facts come second.
+  return centrality * mentionsPlace * position * substance * storyBonus(sentence);
 }
 
 /** Article sentences (index 0 = the defining first sentence) with indices ranked best first. */

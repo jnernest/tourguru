@@ -5,6 +5,7 @@ export function createMemoryToldStore(): ToldStore {
   const ids = new Set<string>();
   return {
     has: (poiId) => ids.has(poiId),
+    count: () => ids.size,
     async add(poiId) {
       ids.add(poiId);
     },

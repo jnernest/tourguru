@@ -13,6 +13,7 @@ export async function openToldStore(): Promise<ToldStore> {
 
   return {
     has: (poiId) => ids.has(poiId),
+    count: () => ids.size,
     async add(poiId) {
       ids.add(poiId);
       save();

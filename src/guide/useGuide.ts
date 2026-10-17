@@ -17,6 +17,7 @@ import type { NarrationEngine } from '../narration/NarrationEngine';
 import { createLocalLanguageResolver } from '../pois/localLanguage';
 import { createMultiLanguageSource } from '../pois/multiLanguageSource';
 import { createWikipediaSource } from '../pois/wikipediaSource';
+import { planRoute, type RoutePlan } from '../route/planner';
 import { createMemoryToldStore } from '../storage/memoryToldStore';
 import { openToldStore, type ToldStore } from '../storage/toldStore';
 import { expoSpeaker } from '../voice/speaker';
@@ -81,6 +82,8 @@ export function useGuide(lang: LanguageCode) {
   const [aiNotice, setAiNotice] = useState<string | null>(null);
   /** Why the last on-device translation failed, shown so the cause is visible on the phone. */
   const [translationNotice, setTranslationNotice] = useState<string | null>(null);
+  /** The suggested walk, if the user asked for one. */
+  const [route, setRoute] = useState<RoutePlan | null>(null);
   const controllerRef = useRef<GuideController | null>(null);
   const toldRef = useRef<ToldStore | null>(null);
   const stopWatchRef = useRef<(() => void) | null>(null);
@@ -178,7 +181,29 @@ export function useGuide(lang: LanguageCode) {
   const skip = useCallback(() => void controllerRef.current?.skip(), []);
   /** Narrates `poiId`, or the best untold place nearby when omitted. */
   const tellAbout = useCallback((poiId?: string) => void controllerRef.current?.tellAbout(poiId), []);
-  const resetHistory = useCallback(() => void toldRef.current?.clear(), []);
+  const resetHistory = useCallback(() => {
+    void toldRef.current?.clear().then(() => controllerRef.current?.refreshDiscovery());
+  }, []);
+  const isTold = useCallback((poiId: string) => controllerRef.current?.isTold(poiId) ?? false, []);
+
+  /** Plans a short walk past the best places around the user that they have not heard yet. */
+  const planWalk = useCallback(() => {
+    const controller = controllerRef.current;
+    const position = controller?.state.position;
+    if (!controller || !position) {
+      setStartError('Start a walk first, so I know where you are.');
+      return;
+    }
+    const plan = planRoute(position, controller.state.nearby, (id) => controller.isTold(id));
+    if (!plan) {
+      setStartError('Not enough new places nearby for a walk yet. Try a bit further on.');
+      return;
+    }
+    setStartError(null);
+    log('info', `Planned walk: ${plan.stops.map((s) => s.title).join(' → ')} (${Math.round(plan.distanceM)} m, ~${plan.minutes} min)`);
+    setRoute(plan);
+  }, []);
+  const endWalk = useCallback(() => setRoute(null), []);
   const shareLog = useCallback(() => {
     shareDiagnostics({
       lang,
@@ -195,6 +220,10 @@ export function useGuide(lang: LanguageCode) {
     aiNotice,
     translationNotice,
     shareLog,
+    route,
+    planWalk,
+    endWalk,
+    isTold,
     start,
     startSimulated,
     stop,

@@ -3,6 +3,8 @@ import * as SQLite from 'expo-sqlite';
 /** Remembers which places have already been narrated, across app restarts. */
 export interface ToldStore {
   has(poiId: string): boolean;
+  /** Places discovered so far, for the discovery badges. */
+  count(): number;
   add(poiId: string, at: number): Promise<void>;
   clear(): Promise<void>;
 }
@@ -19,6 +21,7 @@ export async function openToldStore(): Promise<ToldStore> {
 
   return {
     has: (poiId) => ids.has(poiId),
+    count: () => ids.size,
     async add(poiId, at) {
       ids.add(poiId);
       await db.runAsync('INSERT OR REPLACE INTO told (poi_id, told_at) VALUES (?, ?)', poiId, at);
