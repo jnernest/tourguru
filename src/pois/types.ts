@@ -19,6 +19,14 @@ export interface Poi extends LatLon {
   /** MediaWiki page id within the `lang` edition. */
   pageId: number;
   url: string;
+  /** The article's main picture (freely licensed, from Wikimedia Commons), when it has one. */
+  image: PoiImage | null;
+}
+
+export interface PoiImage {
+  url: string;
+  width: number;
+  height: number;
 }
 
 export interface PoiSource {

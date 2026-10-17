@@ -19,6 +19,7 @@ describe('buildGeoQueryUrl', () => {
     expect(url).toContain('ggsradius=500');
     expect(url).toContain('prop=coordinates%7Cextracts%7Cinfo%7Cpageprops');
     expect(url).toContain('colimit=20');
+    expect(url).toContain('pithumbsize=500');
   });
 
   it('rejects anything but a plain language code before it reaches the hostname', () => {
@@ -43,6 +44,38 @@ describe('parseGeoQueryResponse', () => {
       url: expect.stringMatching(/^https:\/\/en\.wikipedia\.org\/\?curid=\d+$/),
     });
     expect(frauenkirche?.summary.length).toBeGreaterThan(50);
+  });
+
+  it('keeps the article picture from Wikimedia', () => {
+    const frauenkirche = parseGeoQueryResponse(enFixture, 'en').find((p) => p.id === 'Q167193');
+    expect(frauenkirche?.image).toMatchObject({
+      url: expect.stringMatching(/^https:\/\/[a-z]+\.wikimedia\.org\//),
+      width: 500,
+    });
+    const withImages = parseGeoQueryResponse(enFixture, 'en').filter((p) => p.image);
+    expect(withImages.length).toBeGreaterThan(10);
+  });
+
+  it('ignores pictures from anywhere but Wikimedia', () => {
+    const body = {
+      query: {
+        pages: [
+          {
+            pageid: 1,
+            title: 'X',
+            coordinates: [{ lat: 1, lon: 2 }],
+            extract: 'Text.',
+            thumbnail: { source: 'http://evil.example/x.jpg', width: 500, height: 300 },
+          },
+        ],
+      },
+    };
+    expect(parseGeoQueryResponse(body, 'en')[0].image).toBeNull();
+  });
+
+  it('throws on MediaWiki error responses instead of reporting no places', () => {
+    const body = { error: { code: 'ratelimited', info: 'Too many requests' } };
+    expect(() => parseGeoQueryResponse(body, 'de')).toThrow('Wikipedia API error (de): ratelimited Too many requests');
   });
 
   it('gives the same place the same id across languages', () => {

@@ -21,14 +21,10 @@ function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
     : `GPS: ${accuracy}`;
 }
 
-function GuideScreen() {
-  const [lang, setLang] = useState<LanguageCode>('en');
-  const guide = useGuide(lang);
-
+/** Everything above the place list; scrolls together with it. */
+function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.appTitle}>Walk Guide</Text>
-      <LanguagePicker value={lang} onChange={setLang} />
+    <View>
       <NowPlayingCard
         poi={guide.snapshot.current}
         narration={guide.snapshot.narration}
@@ -60,7 +56,24 @@ function GuideScreen() {
         </Pressable>
       )}
       {guide.walking && <Text style={styles.notice}>{gpsStatus(guide.snapshot)}</Text>}
-      <NearbyList items={guide.snapshot.nearby} lang={lang} onSelect={guide.tellAbout} />
+    </View>
+  );
+}
+
+function GuideScreen() {
+  const [lang, setLang] = useState<LanguageCode>('en');
+  const guide = useGuide(lang);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.appTitle}>Walk Guide</Text>
+      <LanguagePicker value={lang} onChange={setLang} />
+      <NearbyList
+        items={guide.snapshot.nearby}
+        lang={lang}
+        onSelect={guide.tellAbout}
+        header={<GuideHeader guide={guide} />}
+      />
       <Text style={styles.shareLog} onPress={guide.shareLog} accessibilityRole="button">
         Share diagnostic log
       </Text>

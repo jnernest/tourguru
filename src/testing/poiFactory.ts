@@ -16,6 +16,7 @@ export function poiNorth(id: string, metresNorth: number, overrides: Partial<Poi
     lon: ORIGIN.lon,
     lang: 'en',
     pageId: 1000,
+    image: null,
     url: `https://en.wikipedia.org/?curid=${id}`,
     ...overrides,
   };

@@ -1,11 +1,13 @@
 import { USER_AGENT } from '../config';
 import type { LatLon } from '../geo/geo';
-import type { Poi, PoiSource, WikiLang } from './types';
+import type { Poi, PoiImage, PoiSource, WikiLang } from './types';
 
 /** MediaWiki caps `exlimit` at 20 when `exintro` is set. */
 const MAX_RESULTS = 20;
 /** MediaWiki caps geosearch radius at 10 km. */
 const MAX_RADIUS_M = 10_000;
+/** One of Wikimedia's standard thumbnail widths; sharp on a phone card, ~40 kB each. */
+const THUMBNAIL_PX = 500;
 
 export interface HttpResponse {
   ok: boolean;
@@ -24,9 +26,12 @@ interface WikiPage {
   length?: number;
   coordinates?: { lat: number; lon: number }[];
   pageprops?: { wikibase_item?: string };
+  thumbnail?: { source: string; width: number; height: number };
 }
 interface GeoQueryResponse {
   query?: { pages?: WikiPage[] };
+  /** MediaWiki reports failures (rate limits, maxlag, bad parameters) with HTTP 200 and this. */
+  error?: { code?: string; info?: string };
 }
 
 /** Wikipedia edition codes are 2–3 lowercase letters; anything else must not reach a hostname. */
@@ -53,9 +58,13 @@ export function buildGeoQueryUrl(center: LatLon, radiusM: number, lang: WikiLang
     ggscoord: `${center.lat}|${center.lon}`,
     ggsradius: String(Math.min(Math.round(radiusM), MAX_RADIUS_M)),
     ggslimit: String(MAX_RESULTS),
-    prop: 'coordinates|extracts|info|pageprops',
+    prop: 'coordinates|extracts|info|pageprops|pageimages',
     // Without this only the first 10 pages get coordinates and the rest are dropped.
     colimit: String(MAX_RESULTS),
+    // Main picture per article. Only freely licensed images are returned by default.
+    piprop: 'thumbnail',
+    pithumbsize: String(THUMBNAIL_PX),
+    pilimit: String(MAX_RESULTS),
     exintro: '1',
     explaintext: '1',
     exlimit: String(MAX_RESULTS),
@@ -79,11 +88,25 @@ function toPoi(page: WikiPage, lang: WikiLang): Poi | null {
     lang,
     pageId: page.pageid,
     url: `https://${lang}.wikipedia.org/?curid=${page.pageid}`,
+    image: toImage(page.thumbnail),
   };
 }
 
+function toImage(thumbnail: WikiPage['thumbnail']): PoiImage | null {
+  // Only https images from Wikimedia's own hosts are shown.
+  if (!thumbnail || !/^https:\/\/[a-z]+\.wikimedia\.org\//.test(thumbnail.source)) {
+    return null;
+  }
+  return { url: thumbnail.source, width: thumbnail.width, height: thumbnail.height };
+}
+
 export function parseGeoQueryResponse(body: unknown, lang: WikiLang): Poi[] {
-  const pages = (body as GeoQueryResponse).query?.pages ?? [];
+  const { error, query } = body as GeoQueryResponse;
+  if (error) {
+    // Throw rather than return [], so "no places here" is not confused with "request failed".
+    throw new Error(`Wikipedia API error (${lang}): ${error.code ?? 'unknown'} ${error.info ?? ''}`.trim());
+  }
+  const pages = query?.pages ?? [];
   return pages.map((p) => toPoi(p, lang)).filter((p): p is Poi => p !== null);
 }
 

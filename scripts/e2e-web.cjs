@@ -37,6 +37,9 @@ async function main() {
   const executablePath = CHROME_PATHS.find((p) => fs.existsSync(p));
   const browser = await chromium.launch({ executablePath, headless: true });
   const context = await browser.newContext({
+    // A typical Android phone, so the screenshot shows the real layout.
+    viewport: { width: 412, height: 915 },
+    deviceScaleFactor: 2,
     permissions: ['geolocation'],
     geolocation: { latitude: 48.1374, longitude: 11.5755 },
   });
