@@ -1,0 +1,507 @@
+{
+ "batchcomplete": true,
+ "query": {
+  "pages": [
+   {
+    "pageid": 19058,
+    "ns": 0,
+    "title": "Munich",
+    "index": -1,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.575,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Munich (German: München [ˈmʏnçn̩] , Bavarian: Minga [ˈmɪŋ(ː)ɐ] ) is the capital and most populous city of the German state of Bavaria. As of 30 November 2024, its population was 1,604,384, making it the third most-populous city in Germany after Berlin and Hamburg. Munich is the largest city in Germany that is not a state of its own, and it ranks as the 11th-largest city in the European Union (EU). The metropolitan area has around 3 million inhabitants, and the broader Munich Metropolitan Region is home to about 6.2 million people. It is the third largest metropolitan region by GDP in the EU. Munich is located on the river Isar north of the Alps. It is the seat of the Upper Bavarian administr",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-17T13:24:28Z",
+    "lastrevid": 1380212752,
+    "length": 199081,
+    "pageprops": {
+     "wikibase_item": "Q1726"
+    }
+   },
+   {
+    "pageid": 1831158,
+    "ns": 0,
+    "title": "Archdiocese of Munich and Freising",
+    "index": 0,
+    "coordinates": [
+     {
+      "lat": 48.13861111,
+      "lon": 11.57388889,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Archdiocese of Munich and Freising (German: Erzbistum München und Freising, Latin: Archidioecesis Monacensis et Frisingensis) is a Latin Church ecclesiastical territory or diocese of the Catholic Church in Bavaria, Germany. It is governed by the Archbishop of Munich and Freising, who administers the see from the co-cathedral in Munich, the Frauenkirche. The other, much older co-cathedral is Freising Cathedral.\nThe see was canonically erected in about 739 by Saint Boniface as the Diocese of Freising, and later became a prince-bishopric. The diocese was dissolved in 1803 following the collapse of the Holy Roman Empire, although a titular bishop ruled until April 1, 1818, when Pope Pius VII",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-17T14:47:26Z",
+    "lastrevid": 1380578325,
+    "length": 5948,
+    "pageprops": {
+     "wikibase_item": "Q219133"
+    }
+   },
+   {
+    "pageid": 1978914,
+    "ns": 0,
+    "title": "Rathaus-Glockenspiel",
+    "index": 1,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.57544,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Rathaus-Glockenspiel is a large mechanical clock located in Marienplatz Square, in the heart of Munich, Germany. Famous for its life-size characters, the clock twice daily re-enacts scenes from Munich's history. First is the story of the marriage of Duke Wilhelm V to Renata of Lorraine in 1568, followed by the story of the Schäfflertanz, also known as the coopers' dance.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-10T12:22:32Z",
+    "lastrevid": 1379514420,
+    "length": 5232,
+    "pageprops": {
+     "wikibase_item": "Q7295591"
+    }
+   },
+   {
+    "pageid": 3357494,
+    "ns": 0,
+    "title": "Frauenkirche, Munich",
+    "index": 2,
+    "coordinates": [
+     {
+      "lat": 48.13861111,
+      "lon": 11.57388889,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Frauenkirche (Full name: German: Dom zu Unserer Lieben Frau, Bavarian: Dom zu Unsra Liabm Frau, lit. 'Cathedral of Our Dear Lady') is a church in Munich, Bavaria, Germany, that serves as the cathedral of the Archdiocese of Munich and Freising and seat of its Archbishop. It is a landmark and is considered a symbol of the Bavarian capital city. Although called \"Münchner Dom\" (Munich Cathedral) on its website and URL, the church is referred to as \"Frauenkirche\" by locals. It is the largest hall church in the world.\nBecause of local height limits, the church towers are widely visible. As a result of the narrow outcome of a local plebiscite, city administration prohibits buildings with a heig",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-17T14:48:07Z",
+    "lastrevid": 1363754673,
+    "length": 23867,
+    "pageprops": {
+     "wikibase_item": "Q167193"
+    }
+   },
+   {
+    "pageid": 3487171,
+    "ns": 0,
+    "title": "Marienplatz",
+    "index": 3,
+    "coordinates": [
+     {
+      "lat": 48.1373,
+      "lon": 11.5755,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Marienplatz (English: Mary's Square, i.e., St. Mary, Our Lady's Square) is a central square in the city centre of Munich, Germany. It has been the city's main square since 1158.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T21:55:06Z",
+    "lastrevid": 1377481594,
+    "length": 6113,
+    "pageprops": {
+     "wikibase_item": "Q252648"
+    }
+   },
+   {
+    "pageid": 4947236,
+    "ns": 0,
+    "title": "St. Peter's Church, Munich",
+    "index": 4,
+    "coordinates": [
+     {
+      "lat": 48.13638889,
+      "lon": 11.57583333,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "St. Peter's Church is a Roman Catholic parish church  in the inner city of Munich, southern Germany. Its 91-metre (299 ft) tower is commonly known as \"Alter Peter\"—Old Peter—and is emblematic of Munich. St Peter's is the oldest recorded parish church in Munich and presumably the originating point for the whole city.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T21:55:47Z",
+    "lastrevid": 1365804241,
+    "length": 5772,
+    "pageprops": {
+     "wikibase_item": "Q707645"
+    }
+   },
+   {
+    "pageid": 7133827,
+    "ns": 0,
+    "title": "Munich Marienplatz station",
+    "index": 5,
+    "coordinates": [
+     {
+      "lat": 48.13722222,
+      "lon": 11.57527778,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Munich Marienplatz is an important stop on the Munich S-Bahn and U-Bahn network, located under the square of the same name in Munich's city centre. The S-Bahn lines S1, S2, S3, S4, S5, S6 and S8 intersect with the U-Bahn lines U3 and U6. The station is one of the most frequently used stations in the network, with up to 24,400 people transferring and 8,000 passengers entering or exiting each hour. In 2007, 175,400 people used the station daily on weekdays, including entries, exits and transfers.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T21:56:37Z",
+    "lastrevid": 1370952183,
+    "length": 9292,
+    "pageprops": {
+     "wikibase_item": "Q455649"
+    }
+   },
+   {
+    "pageid": 11177199,
+    "ns": 0,
+    "title": "Rindermarktbrunnen",
+    "index": 6,
+    "coordinates": [
+     {
+      "lat": 48.13611111,
+      "lon": 11.57416667,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Rindermarktbrunnen or literally \"Cattle market fountain\" in English is a modern sculpture in the historical Altstadt of Munich, in Bavaria, Germany. It was created in 1964 by Munich sculptor and professor of the Munich Academy Josef Henselmann in the course of the reorganisation of the cattle market. The fountain was sponsored by Gunther Henle.\nWith his designs Henselmann observed the historical function of the square as an area of cattle trade and as an area for the cattle there to drink, which existed until into the 19th century. Out of Gneiss he created a terraced fountain scene on the lightly sloping site. The irregularly formed basin of the fountain in the centre of the work imitate",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-10T22:37:57Z",
+    "lastrevid": 1354400844,
+    "length": 1480,
+    "pageprops": {
+     "wikibase_item": "Q178427"
+    }
+   },
+   {
+    "pageid": 11502681,
+    "ns": 0,
+    "title": "New Town Hall (Munich)",
+    "index": 7,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.57555556,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The New Town Hall (German: Neues Rathaus) is a town hall that forms the northern part of Marienplatz in Munich, Bavaria, Germany. It hosts the city government including the city council, offices of the mayors and a small portion of the administration. In 1874 the municipality left the Old Town Hall for its new domicile.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-17T14:48:40Z",
+    "lastrevid": 1372477378,
+    "length": 27141,
+    "pageprops": {
+     "wikibase_item": "Q152979"
+    }
+   },
+   {
+    "pageid": 11682178,
+    "ns": 0,
+    "title": "Mariensäule",
+    "index": 8,
+    "coordinates": [
+     {
+      "lat": 48.1372,
+      "lon": 11.5755,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Mariensäule (lit. 'Mary's Column') is a Marian column located on the Marienplatz in Munich, Germany. Mary is revered here as Patrona Bavariae [de] (Latin: 'Protector of Bavaria').",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-10T22:38:13Z",
+    "lastrevid": 1377480857,
+    "length": 3418,
+    "pageprops": {
+     "wikibase_item": "Q824403"
+    }
+   },
+   {
+    "pageid": 20951621,
+    "ns": 0,
+    "title": "Old Town Hall, Munich",
+    "index": 9,
+    "coordinates": [
+     {
+      "lat": 48.13666667,
+      "lon": 11.57694444,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Old Town Hall (German Altes Rathaus), until 1874 the domicile  of the municipality, serves today as a building for representative purposes for the city council in Munich, Bavaria, Germany. The Old Town Hall bounds the central square Marienplatz on its east side.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T22:00:05Z",
+    "lastrevid": 1329129776,
+    "length": 3810,
+    "pageprops": {
+     "wikibase_item": "Q439458"
+    }
+   },
+   {
+    "pageid": 40632941,
+    "ns": 0,
+    "title": "Ruffinihaus",
+    "index": 10,
+    "coordinates": [
+     {
+      "lat": 48.13638889,
+      "lon": 11.57361111,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Ruffinihaus (from German: \"Ruffini House\") is a group of three houses (also known as Ruffinihäuser) on the Rindermarkt (\"cattle market\") in the Old Town of Munich, Bavaria. It was built by Gabriel von Seidl from 1903 to 1905 and is named after the Ruffiniturm (\"Ruffini tower\", demolished in 1808), which in turn was named after Johann Baptista Ruffini. The Ruffiniturm formed the original Sendlinger Tor (\"Sendlinger gate\") and thus was part of Munich's first city wall. \nThe Ruffinihaus is a three-sided house that borders Sendlinger and Pettenbeck streets. The Ruffinihaus stands on what was the fluvial terrace of the first medieval fortification's moat, as can still be seen today when viewe",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-10T22:50:08Z",
+    "lastrevid": 1304833350,
+    "length": 6782,
+    "pageprops": {
+     "wikibase_item": "Q2174724"
+    }
+   },
+   {
+    "pageid": 44287890,
+    "ns": 0,
+    "title": "Munich Metropolitan Region",
+    "index": 11,
+    "coordinates": [
+     {
+      "lat": 48.1386,
+      "lon": 11.5765,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Munich Metropolitan Region is one of eleven metropolitan regions in Germany, consisting of the agglomeration areas of Munich, Augsburg, Ingolstadt, Landshut, Rosenheim and Landsberg am Lech. It is Germany's richest and second most populous metropolitan region after the Rhine-Ruhr Metropolitan-Region, and before Frankfurt Rhine-Main-Region, the Berlin-Brandenburg Metropolitan-Region and the Stuttgart Metropolitan-Region.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T22:05:17Z",
+    "lastrevid": 1379005542,
+    "length": 6631,
+    "pageprops": {
+     "wikibase_item": "Q880769"
+    }
+   },
+   {
+    "pageid": 54813765,
+    "ns": 0,
+    "title": "Fischbrunnen",
+    "index": 12,
+    "coordinates": [
+     {
+      "lat": 48.13724,
+      "lon": 11.57619,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Fischbrunnen is a fountain in the center of Munich, whose history can be traced back to the Middle Ages. In 1954, Josef Henselmann created the fountain in its present form, using parts of Konrad Knoll’s neo-gothic fountain that was destroyed during the Second World War.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-06T20:51:46Z",
+    "lastrevid": 1293751407,
+    "length": 9954,
+    "pageprops": {
+     "wikibase_item": "Q1419864"
+    }
+   },
+   {
+    "pageid": 56303810,
+    "ns": 0,
+    "title": "Rindermarkt",
+    "index": 13,
+    "coordinates": [
+     {
+      "lat": 48.13626,
+      "lon": 11.5748,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Rindermarkt is one of the oldest streets in Munich, which connects to the Marienplatz in the north through the former Inner Sendlinger Tor. Its continuation today forms the Sendlinger Straße, which leads to the (outer) Sendlinger Tor.\n\nOriginally, this street was used as a cattle marketplace, from which the name of the street derives. Later, noble patricians built their homes here. During the Second World War, the houses on Rindermarkt were badly affected. During the reconstruction, the original roads were extended in the direction of Oberanger to today's place. Only the north side of today's Rindermarkt still follows the old street routes. Today, the Munich Rindermarkt acts as a haven i",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T22:07:33Z",
+    "lastrevid": 1100745259,
+    "length": 3773,
+    "pageprops": {
+     "wikibase_item": "Q2153398"
+    }
+   },
+   {
+    "pageid": 60026784,
+    "ns": 0,
+    "title": "Kaufingertor",
+    "index": 14,
+    "coordinates": [
+     {
+      "lat": 48.13731,
+      "lon": 11.57297,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Kaufingertor was one of the five city gates built around at the end of the 12th century, as the first city walls of medieval Munich. It was located in the west of the old town, approximately at the point where today's Färbergraben and Augustinerstraße meet on Kaufingerstraße.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-07T02:00:11Z",
+    "lastrevid": 1298869728,
+    "length": 3705,
+    "pageprops": {
+     "wikibase_item": "Q1588918"
+    }
+   },
+   {
+    "pageid": 60516966,
+    "ns": 0,
+    "title": "Altstadt (Munich)",
+    "index": 15,
+    "coordinates": [
+     {
+      "lat": 48.138,
+      "lon": 11.574,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The Munich Old Town (German: Altstadt, pronounced [ˈaltˌʃtat] ) is part of the Bavarian capital Munich and has belonged to the city the longest, even if some places which are meanwhile districts of Munich, were mentioned long before Munich's documents spoke of the Old Town. The Old Town forms together with the district Lehel, the municipality No. 1 Altstadt-Lehel. The entire area of the Old Town is listed as both a historical ensemble as well as a historical monument listed in the Bavarian historical monument list.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-15T22:08:11Z",
+    "lastrevid": 1377817311,
+    "length": 26814,
+    "pageprops": {
+     "wikibase_item": "Q445524"
+    }
+   },
+   {
+    "pageid": 68199269,
+    "ns": 0,
+    "title": "1997 UCI Cyclo-cross World Championships",
+    "index": 16,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.575,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The 1997 UCI Cyclo-cross World Championships were held in Munich, Germany from 1-2 February 1997.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-07T03:57:26Z",
+    "lastrevid": 1330767298,
+    "length": 5817,
+    "pageprops": {
+     "wikibase_item": "Q11783241"
+    }
+   },
+   {
+    "pageid": 71407011,
+    "ns": 0,
+    "title": "2022 European Road Championships",
+    "index": 17,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.575,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The 2022 European Road Cycling Championships was the 28th running of the European Road Cycling Championships, held from 14 to 21 August 2022 in Munich, Germany for the elite events, and from 7 to 10 July 2022 in Anadia, Portugal for under-23 and junior events. The event consisted of a total of 6 road races and 8 time trials.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-07T03:57:29Z",
+    "lastrevid": 1376092393,
+    "length": 9986,
+    "pageprops": {
+     "wikibase_item": "Q86837754"
+    }
+   },
+   {
+    "pageid": 81955799,
+    "ns": 0,
+    "title": "1985 UCI Cyclo-cross World Championships",
+    "index": 18,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.575,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "The 1985 UCI Cyclo-cross World Championships were held in Munich, West Germany on 16 and 17 February 1985. It was the 36th edition of the UCI Cyclo-cross World Championships.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "en",
+    "pagelanguagehtmlcode": "en",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-06T20:53:37Z",
+    "lastrevid": 1330572521,
+    "length": 6014,
+    "pageprops": {
+     "wikibase_item": "Q11783231"
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,507 @@
+{
+ "batchcomplete": true,
+ "query": {
+  "pages": [
+   {
+    "pageid": 343560,
+    "ns": 0,
+    "title": "Marienplatz (München)",
+    "index": -1,
+    "coordinates": [
+     {
+      "lat": 48.13722222,
+      "lon": 11.57527778,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der Marienplatz ist der zentrale Platz der Münchner Innenstadt und Teil der Fußgängerzone.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-27T17:54:23Z",
+    "lastrevid": 265373392,
+    "length": 14593,
+    "pageprops": {
+     "wikibase_item": "Q252648"
+    }
+   },
+   {
+    "pageid": 360857,
+    "ns": 0,
+    "title": "Neues Rathaus (München)",
+    "index": 0,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.57583333,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Neue Rathaus ist ein Baudenkmal am Marienplatz im Bezirk Altstadt-Lehel der bayerischen Landeshauptstadt München. Der neugotische Profanbau wurde 1867 bis 1905 von Georg von Hauberrisser errichtet und dient als Sitz des Oberbürgermeisters, des Stadtrats und Teilen der Stadtverwaltung.\nIm Erdgeschoss befinden sich Einzelhandelsgeschäfte, an der Rückseite die Baustelle eines neuen Bahnhofs.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-09T07:25:27Z",
+    "lastrevid": 271171573,
+    "length": 45204,
+    "pageprops": {
+     "wikibase_item": "Q152979"
+    }
+   },
+   {
+    "pageid": 511619,
+    "ns": 0,
+    "title": "Bahnhof München Marienplatz",
+    "index": 1,
+    "coordinates": [
+     {
+      "lat": 48.13722222,
+      "lon": 11.57527778,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der Bahnhof München Marienplatz ist ein Haltepunkt der Deutschen Bahn, eine Haltestelle der Stadtwerke München und einer der wichtigsten Umsteigebahnhöfe im Gebiet des Münchner Verkehrs- und Tarifverbundes.\nDort trifft die in Ost-West-Richtung verlaufende S-Bahn-Stammstrecke mit den in Nord-Süd-Richtung verlaufenden U-Bahn-Linien U3/U6 zusammen. Zu Spitzenzeiten steigen hier bis zu 24.400 Personen pro Stunde um, sowie 8.000 Personen ein und aus. Mit täglich insgesamt 163.000 Reisenden und Besuchern zählt sie zu den 20 meistfrequentierten Stationen im Netz der Deutschen Bahn.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-19T10:45:20Z",
+    "lastrevid": 264880884,
+    "length": 10658,
+    "pageprops": {
+     "wikibase_item": "Q455649"
+    }
+   },
+   {
+    "pageid": 519229,
+    "ns": 0,
+    "title": "Wurmeck",
+    "index": 2,
+    "coordinates": [
+     {
+      "lat": 48.137547,
+      "lon": 11.575101,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Wurmeck ist die Südwestecke des Neuen Rathauses in München, an der die Weinstraße in den Marienplatz mündet. Das 1906 fertiggestellte Gebäude weist hier einen Eckturm auf, dessen Fassadengestaltung in mehreren Etagen die Münchner Sage vom Lindwurm aufgreift.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-07-12T08:25:25Z",
+    "lastrevid": 256550901,
+    "length": 4702,
+    "pageprops": {
+     "wikibase_item": "Q1723592"
+    }
+   },
+   {
+    "pageid": 839844,
+    "ns": 0,
+    "title": "Fischbrunnen (München)",
+    "index": 3,
+    "coordinates": [
+     {
+      "lat": 48.13724167,
+      "lon": 11.57618611,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der Fischbrunnen ist ein Zierbrunnen auf dem Marienplatz in der Altstadt von München. Seine Geschichte lässt sich bis ins Mittelalter nachverfolgen. Beim modernen Fischbrunnen von Josef Henselmann aus dem Jahr 1954 wurden Teile des im Krieg zerstörten neugotischen Fischbrunnens von Konrad Knoll aus dem Jahr 1865 wiederverwendet.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-12T18:35:00Z",
+    "lastrevid": 271283429,
+    "length": 12186,
+    "pageprops": {
+     "wikibase_item": "Q1419864"
+    }
+   },
+   {
+    "pageid": 1301860,
+    "ns": 0,
+    "title": "Stadtverwaltung München",
+    "index": 4,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.57583333,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Stadtverwaltung München ist die kommunale Selbstverwaltung der bayerischen Landeshauptstadt. Die Stadtverwaltung hat ihren Hauptsitz im Neuen Rathaus am Marienplatz 8 im Stadtbezirk Altstadt-Lehel.\nMünchen bildet die größte kommunale Stadtverwaltung in Deutschland (in Berlin und Hamburg als Stadtstaaten sind staatliche und gemeindliche Tätigkeit nicht getrennt). Im Jahr 2024 zählte sie 44.868 Beschäftigte. Für das Haushaltsjahr 2025 hat die Landeshauptstadt München Einnahmen in Höhe von rund 9,6 Milliarden Euro veranschlagt.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-10-01T18:12:58Z",
+    "lastrevid": 270953895,
+    "length": 47083,
+    "pageprops": {
+     "wikibase_item": "Q1361384"
+    }
+   },
+   {
+    "pageid": 1577586,
+    "ns": 0,
+    "title": "Ludwig Beck am Rathauseck",
+    "index": 5,
+    "coordinates": [
+     {
+      "lat": 48.13714611,
+      "lon": 11.57658306,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Ludwig Beck am Rathauseck – Textilhaus Feldmeier AG ist ein Textil-Einzelhändler mit Sitz in München.\nBekannt ist vor allem das neben dem Münchner Rathaus am Marienplatz gelegene Stammhaus des Unternehmens, das in München eine traditionsreiche Institution darstellt und auch als Anziehungspunkt für Touristen gilt. Auf sieben Etagen werden dort gehobene Mode, Textilien und Kosmetik verkauft, zudem auch Accessoires, Geschenkartikel, Wein, Papierwaren, Bücher und Tonträger.\nVon den Ludwig-Beck-Filialen, die im Laufe der Jahre eröffneten, wurde der Großteil bis spätestens Ende der 2000er Jahre wieder geschlossen. 2012 betrieb das Unternehmen neben dem Haupthaus am Marienplatz und dem in der N",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:28:36Z",
+    "lastrevid": 269416738,
+    "length": 10033,
+    "pageprops": {
+     "wikibase_item": "Q1874204"
+    }
+   },
+   {
+    "pageid": 4910899,
+    "ns": 0,
+    "title": "Mariensäule (München)",
+    "index": 6,
+    "coordinates": [
+     {
+      "lat": 48.137224,
+      "lon": 11.575507,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Mariensäule auf dem Marienplatz in München ist ein Maria geweihtes Standbild auf einer Säule. Maria wird hier als Patrona Bavariae (Schutzpatronin Bayerns) verehrt. Die Mariensäule ist in die Liste der Baudenkmäler Münchens aufgenommen.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:32:18Z",
+    "lastrevid": 263750909,
+    "length": 11311,
+    "pageprops": {
+     "wikibase_item": "Q824403"
+    }
+   },
+   {
+    "pageid": 5364224,
+    "ns": 0,
+    "title": "Marienplatz 1 (München)",
+    "index": 7,
+    "coordinates": [
+     {
+      "lat": 48.137437,
+      "lon": 11.574718,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Haus Marienplatz 1 in München ist ein Wohn- und Geschäftshaus. Es ist als Baudenkmal in die Bayerische Denkmalliste eingetragen.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:32:42Z",
+    "lastrevid": 262248618,
+    "length": 4518,
+    "pageprops": {
+     "wikibase_item": "Q1366417"
+    }
+   },
+   {
+    "pageid": 5364237,
+    "ns": 0,
+    "title": "Marienplatz 2 (München)",
+    "index": 8,
+    "coordinates": [
+     {
+      "lat": 48.137552,
+      "lon": 11.574777,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Haus Marienplatz 2 in München ist ein Wohn- und Geschäftshaus. Es ist als Baudenkmal in die Bayerische Denkmalliste eingetragen.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:32:42Z",
+    "lastrevid": 261015489,
+    "length": 3732,
+    "pageprops": {
+     "wikibase_item": "Q1715391"
+    }
+   },
+   {
+    "pageid": 5364258,
+    "ns": 0,
+    "title": "Marienplatz 21 (München)",
+    "index": 9,
+    "coordinates": [
+     {
+      "lat": 48.136901,
+      "lon": 11.575864,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Haus Marienplatz 21 in München ist ein Wohn- und Geschäftshaus. Es ist als Baudenkmal in die Bayerische Denkmalliste eingetragen. Von den vor dem Zweiten Weltkrieg an der Südseite des Marienplatzes stehenden Gebäuden ist es das einzige noch erhalten gebliebene.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:32:42Z",
+    "lastrevid": 261553378,
+    "length": 5844,
+    "pageprops": {
+     "wikibase_item": "Q1897903"
+    }
+   },
+   {
+    "pageid": 5598972,
+    "ns": 0,
+    "title": "Altstadt (München)",
+    "index": 10,
+    "coordinates": [
+     {
+      "lat": 48.137225,
+      "lon": 11.57536389,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Münchner Altstadt ist der Stadtteil der bayerischen Landeshauptstadt München, der am längsten zu der Stadt gehört, auch wenn einige Orte, die mittlerweile Stadtteile Münchens sind, schon lange vor München urkundlich erwähnt wurden. Die Altstadt bildet zusammen mit dem Stadtteil Lehel den Stadtbezirk Nr. 1 Altstadt-Lehel. Der gesamte Bereich der Altstadt ist sowohl als denkmalgeschütztes Ensemble als auch als Bodendenkmal (archäologisches Denkmal) in die Bayerische Denkmalliste eingetragen.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:32:56Z",
+    "lastrevid": 264810164,
+    "length": 29323,
+    "pageprops": {
+     "wikibase_item": "Q445524"
+    }
+   },
+   {
+    "pageid": 5998917,
+    "ns": 0,
+    "title": "Rischart",
+    "index": 11,
+    "coordinates": [
+     {
+      "lat": 48.136824,
+      "lon": 11.57624,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Firma Rischart (/ˈʁɪʃaːɐt/; Max Rischart’s Backhaus KG) ist ein Münchner Traditionsunternehmen. Der Familienbetrieb wurde 1883 von Max Rischart gegründet und beschäftigt heute mehr als 500 Mitarbeiter. Jährlich kaufen ca. 8 Mio. Kunden in den 22 Filialen ein. Dazu zählt auch die meistfrequentierte Bäckereifiliale Deutschlands, die Rischart-Filiale am Marienplatz 18. Dort befindet sich zugleich der Firmensitz. Das Unternehmen wird seit 2009 von Magnus Müller-Rischart in der fünften Generation geführt.\n\n",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:33:22Z",
+    "lastrevid": 269989963,
+    "length": 18436,
+    "pageprops": {
+     "wikibase_item": "Q2154631"
+    }
+   },
+   {
+    "pageid": 7934765,
+    "ns": 0,
+    "title": "PresseClub München",
+    "index": 12,
+    "coordinates": [
+     {
+      "lat": 48.13686111,
+      "lon": 11.57538889,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der PresseClub München ist ein eingetragener Verein aus München. Er richtet jährlich bis zu 300 Veranstaltungen aus (2022: 134 Veranstaltungen). Der Verein wurde am 16. März 1950 unter dem Namen Verein Auswärtige Presse in München gegründet und ist damit eines der traditionsreichsten Mediennetzwerke in Deutschland. Der Presseclub in München hat nach eigenen Angaben 590 Mitglieder, zuzüglich 289 Nachwuchsjournalisten.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-30T18:44:35Z",
+    "lastrevid": 258630555,
+    "length": 17970,
+    "pageprops": {
+     "wikibase_item": "Q15840931"
+    }
+   },
+   {
+    "pageid": 8999462,
+    "ns": 0,
+    "title": "Christkindlmarkt am Marienplatz",
+    "index": 13,
+    "coordinates": [
+     {
+      "lat": 48.137222,
+      "lon": 11.575278,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der Christkindlmarkt am Marienplatz ist ein Weihnachtsmarkt am Marienplatz in München. Veranstalter ist das Referat für Arbeit und Wirtschaft (RAW) der Stadtverwaltung München.\nMit seinen etwa 140 Marktständen hat er heute jährlich rund drei Millionen Besucher aus aller Welt. Neben dem umfangreichen musikalisch-kulturellen Begleitprogramm gehört zu seinen Attraktionen der fast 30 Meter hohe Christbaum vor dem Rathaus mit rund 2.500 Lichtern, der jedes Jahr von einer anderen Ortschaft aus dem In- oder Ausland (Österreich, Südtirol) den Münchner Bürgern gespendet wird. Als Entgelt für das Geschenk darf sich die Gemeinde im Innenhof des Rathauses touristisch präsentieren und einen Glühweinaussc",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-13T22:16:27Z",
+    "lastrevid": 270463880,
+    "length": 6304,
+    "pageprops": {
+     "wikibase_item": "Q21064705"
+    }
+   },
+   {
+    "pageid": 9701824,
+    "ns": 0,
+    "title": "Altes Landschaftsgebäude",
+    "index": 14,
+    "coordinates": [
+     {
+      "lat": 48.1375,
+      "lon": 11.57583333,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Das Alte Landschaftsgebäude war ein ehemals öffentliches Gebäude am Marienplatz in München.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-07-12T08:29:20Z",
+    "lastrevid": 218422646,
+    "length": 3498,
+    "pageprops": {
+     "wikibase_item": "Q28034096"
+    }
+   },
+   {
+    "pageid": 11454568,
+    "ns": 0,
+    "title": "Sektion Prag",
+    "index": 15,
+    "coordinates": [
+     {
+      "lat": 48.137222,
+      "lon": 11.575556,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Sektion Prag war eine Sektion des Deutschen Alpenvereins (später Deutschen und Österreichischen Alpenvereins), die im Jahr 1870 in Prag im damaligen Königreich Böhmen gegründet wurde.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:39:56Z",
+    "lastrevid": 269388431,
+    "length": 10779,
+    "pageprops": {
+     "wikibase_item": "Q99359051"
+    }
+   },
+   {
+    "pageid": 12580268,
+    "ns": 0,
+    "title": "Weinstraße (München)",
+    "index": 16,
+    "coordinates": [
+     {
+      "lat": 48.13833333,
+      "lon": 11.57530556,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Weinstraße in München beginnt am Marienplatz und endet an der Schäfflerstraße, wo sie in die Theatinerstraße übergeht. Sie gehört zu den führenden Einkaufsstraßen Münchens und ist Teil der Fußgängerzone in der Münchner Altstadt.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:41:23Z",
+    "lastrevid": 257860896,
+    "length": 6030,
+    "pageprops": {
+     "wikibase_item": "Q106523136"
+    }
+   },
+   {
+    "pageid": 12583636,
+    "ns": 0,
+    "title": "Rosenstraße (München)",
+    "index": 17,
+    "coordinates": [
+     {
+      "lat": 48.137,
+      "lon": 11.57461111,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Die Rosenstraße in München ist die direkte Verbindung vom Marienplatz zur Sendlinger Straße. Sie gehört zu den führenden Einkaufsstraßen Münchens und ist Teil der Fußgängerzone in der Münchner Altstadt.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:41:23Z",
+    "lastrevid": 242542157,
+    "length": 4071,
+    "pageprops": {
+     "wikibase_item": "Q106523096"
+    }
+   },
+   {
+    "pageid": 12736004,
+    "ns": 0,
+    "title": "Frankfurter Presseclub",
+    "index": 18,
+    "coordinates": [
+     {
+      "lat": 48.13686111,
+      "lon": 11.57538889,
+      "primary": true,
+      "globe": "earth"
+     }
+    ],
+    "extract": "Der Frankfurter Presseclub e.V. ist ein eingetragener gemeinnütziger Verein aus Frankfurt am Main. Er richtet jährlich mehrere dutzende Veranstaltungen aus. Der Verein wurde am 12. Juni 1980 in Frankfurt am Main gegründet. Der Presseclub sieht sich als Mediennetzwerk an und unterhält viele Kooperationen zu anderen Mediennetzwerken, darunter zum Beispiel zum Deutschen Journalisten-Verband.",
+    "contentmodel": "wikitext",
+    "pagelanguage": "de",
+    "pagelanguagehtmlcode": "de",
+    "pagelanguagedir": "ltr",
+    "touched": "2026-09-11T14:41:36Z",
+    "lastrevid": 268115422,
+    "length": 3469,
+    "pageprops": {
+     "wikibase_item": "Q120636802"
+    }
+   }
+  ]
+ }
+}

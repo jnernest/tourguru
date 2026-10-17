@@ -1,0 +1,70 @@
+# TourGuru (Walk Guide)
+
+A GPS-aware tour guide for your phone. As you walk, it finds places around you on Wikipedia
+and Wikidata and tells you about them out loud, in your language, the way a guide would:
+
+> "On your right is Schönbrunn Palace, a palace in Vienna, Austria. Built in 1638. Designed by
+> Johann Bernhard Fischer von Erlach and Nicolò Pacassi. Its style is Baroque. Heritage status:
+> part of UNESCO World Heritage Site. The 1,441-room Baroque palace is one of the most important
+> architectural, cultural, and historic monuments in the country."
+
+## Features
+
+- **Speaks up on its own** when you pass something (60 m, 120 m if ahead, 200 m when standing
+  still), points it out by direction ("on your left", "just ahead", "you've just passed"), never
+  repeats a place, and waits between narrations. "What's around me?" and tap-to-hear for the rest.
+- **Key points, not read-outs:** what the place is and its main facts (built, architect, style,
+  UNESCO status, height, named after) from Wikidata, plus one highlight sentence from the article.
+- **Local + your language:** places come from your language's Wikipedia *and* the local one
+  (e.g. German in Vienna), merged; narration is always in your language.
+- **Works offline / without AI:** extractive summarizer and Google ML Kit on-device translation
+  (Android). Optional **AI narration with Claude** when a key is configured.
+- **Simulated walk** through Munich's old town, for testing at a desk.
+- **Diagnostic log** shareable from the app, for debugging on a phone without a cable.
+- Languages: English, Deutsch, Français, Español, Italiano, हिन्दी.
+
+## Run it
+
+```bash
+npm install
+npm start            # Expo dev server (web: npm run web)
+npm run check        # typecheck + lint + Vitest
+npm run e2e:web      # real-browser test (local Chrome) with a simulated walk
+```
+
+Android APK (Expo EAS cloud build, Android only for on-device translation):
+
+```bash
+npm run eas:login
+npm run apk:set-key -- <anthropic-key>   # optional: AI narration (key is compiled into the APK!)
+npm run apk                              # prints a download link / QR code
+```
+
+Expo Go works for the core (no on-device translation, which needs the native module in
+`modules/mlkit-translate`).
+
+## How it works
+
+```
+GPS fix ─► GuideController ─► Wikipedia geosearch, user language + local language (re-queried every 150 m)
+                │                 └► rankPois: proximity · article richness · "ahead" bonus
+                ├► selectCandidate + StabilityGate (2 consistent fixes) + cooldown
+                └► NarrationEngine
+                     ├ ClaudeEngine (optional)   ─┐ falls back to
+                     └ ExtractiveEngine          ◄┘ Wikidata facts · summarizer · ML Kit translation
+                          └► Speaker (expo-speech)
+```
+
+Native APIs (`expo-location`, `expo-speech`, `expo-sqlite`, ML Kit) sit behind interfaces, so the
+core logic is tested in Node with Vitest.
+
+## Data and licensing
+
+- Text from **Wikipedia**, **CC BY-SA 4.0**: the app attributes and links every article it uses.
+  Derived narrations must carry the same attribution and stay share-alike.
+- Facts from **Wikidata**, **CC0**.
+- Wikimedia requests send a descriptive User-Agent (`src/config.ts`). **Set a real contact
+  address before any public release.**
+- Location stays on the device except for coordinates sent to Wikipedia to find nearby articles.
+- With AI narration, the API key is embedded in the app bundle: personal use only. A public
+  release needs a backend proxy.

@@ -1,0 +1,20 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.walkguide'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.mlkittranslate"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+}
+
+dependencies {
+  // Google ML Kit on-device translation. Language models (~30 MB each) download at runtime.
+  implementation 'com.google.mlkit:translate:17.0.3'
+}
