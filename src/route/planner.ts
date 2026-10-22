@@ -113,6 +113,14 @@ export function googleMapsWalkUrl(start: LatLon, stops: LatLon[]): string {
   return `https://www.google.com/maps/dir/?${params.join('&')}`;
 }
 
+/**
+ * Walking directions to one place. Without an origin, Google Maps starts from the phone's
+ * live location, which is more accurate than our last fix.
+ */
+export function googleMapsWalkToUrl(destination: LatLon): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${coords(destination)}&travelmode=walking`;
+}
+
 /** The first stop not told yet: where the walk goes next. */
 export function nextStop(plan: RoutePlan, isTold: (id: string) => boolean): Poi | null {
   return plan.stops.find((s) => !isTold(s.id)) ?? null;

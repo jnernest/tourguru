@@ -21,7 +21,7 @@ function fixAt(metresNorth: number, overrides: Partial<Fix> = {}): Fix {
   };
 }
 
-function setup(pois: Poi[], { canTranslate = false } = {}) {
+function setup(pois: Poi[], { canTranslate = false, autoDepth }: { canTranslate?: boolean; autoDepth?: 'brief' | 'story' } = {}) {
   let clock = 1_000_000;
   const spoken: { text: string; locale: string }[] = [];
   const speaker: Speaker = {
@@ -38,6 +38,7 @@ function setup(pois: Poi[], { canTranslate = false } = {}) {
     speaker,
     told: createMemoryToldStore(),
     canTranslate,
+    autoDepth,
     now: () => clock,
     onChange: vi.fn(),
   };
@@ -190,6 +191,18 @@ describe('GuideController', () => {
     await t.controller.tellAbout('b');
     expect(t.controller.state).toMatchObject({ discoveredTotal: 2, badge: null });
     expect(t.controller.state.discoveredIds.sort()).toEqual(['a', 'b']);
+  });
+
+  it('tells the full story automatically when configured (AI available), brief otherwise', async () => {
+    for (const [autoDepth, expected] of [
+      ['story', 'story'],
+      [undefined, 'brief'],
+    ] as const) {
+      const t = setup([poiNorth('a', 10)], { autoDepth });
+      const narrate = vi.spyOn(t.deps.engine, 'narrate');
+      await t.settleAt(0);
+      expect(narrate.mock.calls[0][2]?.depth).toBe(expected);
+    }
   });
 
   it('skip stops the speaker', async () => {

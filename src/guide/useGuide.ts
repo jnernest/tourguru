@@ -111,6 +111,9 @@ export function useGuide(lang: LanguageCode) {
           speaker: expoSpeaker,
           told,
           canTranslate: AI_NARRATION_ENABLED || OFFLINE_TRANSLATION_AVAILABLE,
+          // The AI's story is the best narration; if it fails (free limit, offline), the
+          // offline engine tells the story from the Wikipedia text instead.
+          autoDepth: AI_NARRATION_ENABLED ? 'story' : 'brief',
           now: Date.now,
           onChange: setSnapshot,
         },

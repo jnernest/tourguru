@@ -71,6 +71,11 @@ export interface GuideDeps {
    * automatic narration skips those places; they can still be tapped.
    */
   canTranslate: boolean;
+  /**
+   * How much to tell automatically and on tap: the full story when an AI tells it well,
+   * the short key facts when narration is offline. "Tell me more" always tells the story.
+   */
+  autoDepth?: NarrationDepth;
   now: () => number;
   onChange: (snapshot: GuideSnapshot) => void;
 }
@@ -89,6 +94,10 @@ export class GuideController {
     private readonly deps: GuideDeps,
     private lang: LanguageCode,
   ) {}
+
+  private get autoDepth(): NarrationDepth {
+    return this.deps.autoDepth ?? 'brief';
+  }
 
   get state(): GuideSnapshot {
     return this.snapshot;
@@ -115,7 +124,7 @@ export class GuideController {
       const speakable = this.deps.canTranslate ? ranked : ranked.filter((r) => r.poi.lang === this.lang);
       const candidate = selectCandidate(speakable, (id) => this.deps.told.has(id), standingStill);
       if (this.gate.accept(candidate?.poi.id ?? null) && candidate && this.canNarrate()) {
-        this.narration = this.narrate(candidate.poi);
+        this.narration = this.narrate(candidate.poi, this.autoDepth);
       }
     } finally {
       this.busy = false;
@@ -146,7 +155,7 @@ export class GuideController {
       this.update({ error: reason });
       return;
     }
-    await this.interruptAndTell(target.poi, 'brief');
+    await this.interruptAndTell(target.poi, this.autoDepth);
   }
 
   /** "Tell me more": the history and a fun fact about the place on the card. */

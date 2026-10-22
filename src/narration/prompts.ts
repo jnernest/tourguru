@@ -32,8 +32,9 @@ Mode "brief" (told while walking past):
 - One short sentence on what the place is, then the two or three things a visitor would remember: when and by whom it was built, a famous person or event. If the source has a legend, anecdote, curiosity or record, end with it as a fun fact.
 - 60 to 100 words.
 
-Mode "story" (the listener asked to hear more):
-- Tell the history of the place as a story, in chronological order: how it began, who built or changed it and why, the turning points, and what it is today. Use the dates the source gives.
+Mode "story" (the full story, told as the listener reaches the place or when they ask):
+- If a position is given, first point the place out in one short sentence the same way as in brief mode (never "Nearby").
+- Then tell the history of the place as a story, in chronological order: how it began, who built or changed it and why, the turning points, and what it is today. Use the dates the source gives.
 - Then one sentence that starts with "Fun fact:" (in the requested language) with the most surprising legend, anecdote, record or curiosity in the source. Leave it out if the source has none.
 - 140 to 220 words.`;
 

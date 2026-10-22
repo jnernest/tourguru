@@ -69,12 +69,19 @@ async function main() {
     const title = await page.locator('[data-testid="narration"]').locator('xpath=preceding-sibling::*[1]').textContent();
     console.log(`✔ narrated "${title}":\n    ${(await narration.textContent()).slice(0, 300)}`);
 
+    const before = await narration.textContent();
     await page.getByText('Tell me more', { exact: false }).click();
+    // The story replaces the narration once ready (it can start the same way when walking).
     await page.waitForFunction(
-      () => document.querySelector('[data-testid="narration"]')?.textContent?.startsWith('Here is the story of'),
-      undefined,
+      (prev) => {
+        const t = document.querySelector('[data-testid="narration"]')?.textContent ?? '';
+        return t !== prev && t !== 'Preparing…' && t.length > 0;
+      },
+      before,
       { timeout: NARRATION_TIMEOUT_MS },
     );
+    if (!(await page.getByText('Walk there', { exact: false }).isVisible())) throw new Error('"Walk there" button missing');
+    console.log('✔ "Walk there" button shown');
     console.log(`✔ story: ${(await narration.textContent()).slice(0, 160)}…`);
 
     await page.getByText('Suggest a walk', { exact: false }).click();

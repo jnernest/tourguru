@@ -71,8 +71,13 @@ export class ExtractiveEngine implements NarrationEngine {
   }
 
   /** "Tell me more": the history in chronological order, then a fun fact. */
-  private async story({ poi, lang }: Request, entity: EntityText | null, text: string): Promise<string> {
+  private async story({ poi, lang, context }: Request, entity: EntityText | null, text: string): Promise<string> {
     const name = entity?.label ?? poi.title;
+    // Point the place out when we know where it is (told while walking); else announce the story.
+    const intro =
+      context.distanceM === null
+        ? phrase(lang, 'storyIntro', name)
+        : opening(lang, context, nameWithDescription(lang, name, entity?.description ?? null), poi.id);
     const timeline = historyTimeline(text, poi.title);
     const fact = funFact(text, timeline);
     if (timeline.length === 0 && !fact) {
@@ -85,7 +90,7 @@ export class ExtractiveEngine implements NarrationEngine {
     if (!history && !fun) {
       return phrase(lang, 'otherLanguage', name);
     }
-    return [phrase(lang, 'storyIntro', name), history ?? '', fun ? phrase(lang, 'funFact', fun) : '']
+    return [intro, history ?? '', fun ? phrase(lang, 'funFact', fun) : '']
       .filter((part) => part.length > 0)
       .join(' ');
   }

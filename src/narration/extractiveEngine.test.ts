@@ -130,6 +130,15 @@ describe('ExtractiveEngine', () => {
       expect(text).toMatch(/^Here is the story of Karlstor\. The gate was first mentioned .*1302.* In 1857 .* Fun fact: According to legend/);
     });
 
+    it('points the place out first when told while walking', async () => {
+      const text = await new ExtractiveEngine({ loadText: async () => article }).narrate(gate, 'en', {
+        distanceM: 40,
+        direction: 'left',
+        depth: 'story',
+      });
+      expect(text).toMatch(/^(On your left is|Look to your left:) Karlstor\.? The gate was first mentioned/);
+    });
+
     it('admits when the article has no history to tell', async () => {
       const text = await new ExtractiveEngine({ loadText: async () => 'Karlstor is a gate.' }).narrate(gate, 'en', {
         ...NO_CONTEXT,

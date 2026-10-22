@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { rankPois } from '../pois/poiRanker';
 import { ORIGIN, poiNorth } from '../testing/poiFactory';
-import { googleMapsWalkUrl, MAX_STOPS, nextStop, planRoute } from './planner';
+import { googleMapsWalkToUrl, googleMapsWalkUrl, MAX_STOPS, nextStop, planRoute } from './planner';
 
 const never = () => false;
 const here = { ...ORIGIN, heading: null };
@@ -70,6 +70,12 @@ describe('googleMapsWalkUrl', () => {
     ]);
     expect(url).toBe(
       'https://www.google.com/maps/dir/?api=1&origin=48.000000,11.000000&destination=48.003000,11.000000&travelmode=walking&waypoints=48.001000%2C11.000000%7C48.002000%2C11.000000',
+    );
+  });
+
+  it('builds walking directions to a single place from the live location', () => {
+    expect(googleMapsWalkToUrl({ lat: 48.13856, lon: 11.57357 })).toBe(
+      'https://www.google.com/maps/dir/?api=1&destination=48.138560,11.573570&travelmode=walking',
     );
   });
 

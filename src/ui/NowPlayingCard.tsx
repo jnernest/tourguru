@@ -3,6 +3,7 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { GuideStatus } from '../guide/guideController';
 import type { Poi } from '../pois/types';
+import { googleMapsWalkToUrl } from '../route/planner';
 import { PlaceImage } from './PlaceImage';
 import { colors } from './theme';
 
@@ -54,6 +55,14 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props
           <Pressable accessibilityRole="button" onPress={onMore} style={[styles.skip, styles.more]}>
             <Text style={[styles.skipText, styles.moreText]}>📜 Tell me more</Text>
           </Pressable>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`Walking directions to ${poi.title} in Google Maps`}
+            onPress={() => void Linking.openURL(googleMapsWalkToUrl(poi))}
+            style={styles.skip}
+          >
+            <Text style={styles.skipText}>🧭 Walk there</Text>
+          </Pressable>
           {narrating && (
             <Pressable accessibilityRole="button" onPress={onSkip} style={styles.skip}>
               <Text style={styles.skipText}>Skip</Text>
@@ -85,7 +94,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   skipText: { color: colors.primary, fontWeight: '600' },
-  buttons: { flexDirection: 'row', gap: 8 },
+  buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   more: { backgroundColor: colors.primary },
   moreText: { color: colors.onPrimary },
 });
