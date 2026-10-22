@@ -1,4 +1,4 @@
-import { contentWords, splitSentences, stripParentheticals } from '../text/sentences';
+import { contentWords, proseOnly, splitSentences, stripParentheticals } from '../text/sentences';
 import { storyBonus } from '../text/storyCues';
 
 /** Roughly 30–40 s of speech. */
@@ -12,15 +12,7 @@ const MAX_SENTENCE_CHARS = 350;
 /** Sentences shorter than this get proportionally less weight. */
 const FULL_WEIGHT_CHARS = 60;
 
-/** Drops headings and list items, which plain-text Wikipedia extracts keep as bare lines. */
-function proseOnly(text: string): string {
-  return text
-    .split('\n')
-    .filter((line) => /[.!?।。]["'”’)\]]*\s*$/.test(line.trim()))
-    .join(' ');
-}
-
-function wordFrequencies(sentences: string[]): Map<string, number> {
+export function wordFrequencies(sentences: string[]): Map<string, number> {
   const freq = new Map<string, number>();
   for (const word of sentences.flatMap(contentWords)) {
     freq.set(word, (freq.get(word) ?? 0) + 1);

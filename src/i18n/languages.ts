@@ -7,6 +7,9 @@ export const LANGUAGES = {
   en: {
     label: 'English',
     englishName: 'English',
+    storyIntro: 'Here is the story of {title}.',
+    funFact: 'Fun fact: {title}',
+    noHistory: 'I do not know much more about the history of {title}.',
     ttsLocale: 'en-US',
     noInfo: "I don't have much information about {title}.",
     otherLanguage:
@@ -15,6 +18,9 @@ export const LANGUAGES = {
   de: {
     label: 'Deutsch',
     englishName: 'German',
+    storyIntro: 'Hier ist die Geschichte von {title}.',
+    funFact: 'Übrigens: {title}',
+    noHistory: 'Über die Geschichte von {title} weiß ich leider nicht mehr.',
     ttsLocale: 'de-DE',
     noInfo: 'Über {title} weiß ich leider nicht viel.',
     otherLanguage:
@@ -23,6 +29,9 @@ export const LANGUAGES = {
   fr: {
     label: 'Français',
     englishName: 'French',
+    storyIntro: 'Voici l’histoire de {title}.',
+    funFact: 'Le saviez-vous ? {title}',
+    noHistory: 'Je n’en sais pas plus sur l’histoire de {title}.',
     ttsLocale: 'fr-FR',
     noInfo: "Je n'ai pas beaucoup d'informations sur {title}.",
     otherLanguage:
@@ -31,6 +40,9 @@ export const LANGUAGES = {
   es: {
     label: 'Español',
     englishName: 'Spanish',
+    storyIntro: 'Esta es la historia de {title}.',
+    funFact: 'Curiosidad: {title}',
+    noHistory: 'No sé mucho más sobre la historia de {title}.',
     ttsLocale: 'es-ES',
     noInfo: 'No tengo mucha información sobre {title}.',
     otherLanguage:
@@ -39,6 +51,9 @@ export const LANGUAGES = {
   it: {
     label: 'Italiano',
     englishName: 'Italian',
+    storyIntro: 'Ecco la storia di {title}.',
+    funFact: 'Curiosità: {title}',
+    noHistory: 'Non so molto di più sulla storia di {title}.',
     ttsLocale: 'it-IT',
     noInfo: 'Non ho molte informazioni su {title}.',
     otherLanguage:
@@ -47,6 +62,9 @@ export const LANGUAGES = {
   hi: {
     label: 'हिन्दी',
     englishName: 'Hindi',
+    storyIntro: 'यह है {title} की कहानी।',
+    funFact: 'रोचक तथ्य: {title}',
+    noHistory: '{title} के इतिहास के बारे में मुझे और ज़्यादा नहीं पता।',
     ttsLocale: 'hi-IN',
     noInfo: '{title} के बारे में मेरे पास ज़्यादा जानकारी नहीं है।',
     otherLanguage:
@@ -60,7 +78,7 @@ export const LANGUAGE_CODES = Object.keys(LANGUAGES) as LanguageCode[];
 
 export function phrase(
   lang: LanguageCode,
-  key: 'noInfo' | 'otherLanguage',
+  key: 'noInfo' | 'otherLanguage' | 'storyIntro' | 'funFact' | 'noHistory',
   title: string,
 ): string {
   return LANGUAGES[lang][key].replace('{title}', title);

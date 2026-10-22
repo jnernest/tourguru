@@ -5,6 +5,7 @@ import { nameWithDescription, opening } from '../i18n/openings';
 import type { Poi } from '../pois/types';
 import type { Translator } from '../translate/types';
 import { NO_CONTEXT, type NarrationContext, type NarrationEngine } from './NarrationEngine';
+import { funFact, historyTimeline, isStoryLike } from './history';
 import { highlight, summarize } from './summarizer';
 
 export interface ExtractiveEngineDeps {
@@ -42,6 +43,9 @@ export class ExtractiveEngine implements NarrationEngine {
       this.deps.loadText ? this.deps.loadText(poi) : Promise.resolve(poi.summary),
       this.deps.describe ? this.deps.describe(poi.id, lang) : Promise.resolve(null),
     ]);
+    if (context.depth === 'story') {
+      return this.story(req, entity, text);
+    }
     if (entity && entity.facts.length >= MIN_FACTS_FOR_KEY_POINTS) {
       return this.keyPoints(req, entity, text);
     }
@@ -57,12 +61,39 @@ export class ExtractiveEngine implements NarrationEngine {
     return entity ? this.keyPoints(req, entity, '') : phrase(lang, 'otherLanguage', poi.title);
   }
 
-  /** "On your right is Schönbrunn Palace, a palace in Vienna. Built in 1638. … <one highlight>" */
+  /** "On your right is Schönbrunn Palace, a palace in Vienna. Built in 1638. … Fun fact: …" */
   private async keyPoints({ poi, lang, context }: Request, entity: EntityText, text: string): Promise<string> {
     const name = nameWithDescription(lang, entity.label ?? poi.title, entity.description);
     const best = text ? highlight(text, poi.title) : '';
-    const extra = best && poi.lang !== lang ? await this.translate(best, poi.lang, lang) : best;
-    return [opening(lang, context, name, poi.id), ...entity.facts, extra ?? ''].filter((part) => part.length > 0).join(' ');
+    const extra = await this.inUserLanguage(best, poi.lang, lang);
+    const said = extra && isStoryLike(best) ? phrase(lang, 'funFact', extra) : extra;
+    return [opening(lang, context, name, poi.id), ...entity.facts, said ?? ''].filter((part) => part.length > 0).join(' ');
+  }
+
+  /** "Tell me more": the history in chronological order, then a fun fact. */
+  private async story({ poi, lang }: Request, entity: EntityText | null, text: string): Promise<string> {
+    const name = entity?.label ?? poi.title;
+    const timeline = historyTimeline(text, poi.title);
+    const fact = funFact(text, timeline);
+    if (timeline.length === 0 && !fact) {
+      return phrase(lang, 'noHistory', name);
+    }
+    const [history, fun] = await Promise.all([
+      this.inUserLanguage(timeline.join(' '), poi.lang, lang),
+      this.inUserLanguage(fact, poi.lang, lang),
+    ]);
+    if (!history && !fun) {
+      return phrase(lang, 'otherLanguage', name);
+    }
+    return [phrase(lang, 'storyIntro', name), history ?? '', fun ? phrase(lang, 'funFact', fun) : '']
+      .filter((part) => part.length > 0)
+      .join(' ');
+  }
+
+  /** The text as is when it is already in the user's language, else translated; null if impossible. */
+  private async inUserLanguage(text: string, from: string, to: string): Promise<string | null> {
+    if (!text) return '';
+    return from === to ? text : this.translate(text, from, to);
   }
 
   private async translate(text: string, from: string, to: string): Promise<string | null> {

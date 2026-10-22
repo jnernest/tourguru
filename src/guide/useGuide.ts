@@ -183,6 +183,8 @@ export function useGuide(lang: LanguageCode) {
   const skip = useCallback(() => void controllerRef.current?.skip(), []);
   /** Narrates `poiId`, or the best untold place nearby when omitted. */
   const tellAbout = useCallback((poiId?: string) => void controllerRef.current?.tellAbout(poiId), []);
+  /** History and a fun fact about the place on the card. */
+  const tellMore = useCallback(() => void controllerRef.current?.tellMore(), []);
   const resetHistory = useCallback(() => {
     void toldRef.current?.clear().then(() => controllerRef.current?.refreshDiscovery());
   }, []);
@@ -231,6 +233,7 @@ export function useGuide(lang: LanguageCode) {
     stop,
     skip,
     tellAbout,
+    tellMore,
     resetHistory,
   };
 }

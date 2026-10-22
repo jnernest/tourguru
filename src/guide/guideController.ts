@@ -2,7 +2,12 @@ import { errorText, log, roundedCoords } from '../diagnostics/log';
 import { bearingDegrees, distanceMeters, relativeDirection } from '../geo/geo';
 import { LANGUAGES, type LanguageCode } from '../i18n/languages';
 import type { Fix } from '../location/fix';
-import { NO_CONTEXT, type NarrationContext, type NarrationEngine } from '../narration/NarrationEngine';
+import {
+  NO_CONTEXT,
+  type NarrationContext,
+  type NarrationDepth,
+  type NarrationEngine,
+} from '../narration/NarrationEngine';
 import { rankPois, type RankedPoi } from '../pois/poiRanker';
 import type { Poi, PoiSource } from '../pois/types';
 import type { ToldStore } from '../storage/toldStore';
@@ -141,11 +146,25 @@ export class GuideController {
       this.update({ error: reason });
       return;
     }
+    await this.interruptAndTell(target.poi, 'brief');
+  }
+
+  /** "Tell me more": the history and a fun fact about the place on the card. */
+  async tellMore(): Promise<void> {
+    const poi = this.snapshot.current;
+    if (!poi) {
+      this.update({ error: 'Nothing told yet: tap a place first.' });
+      return;
+    }
+    await this.interruptAndTell(poi, 'story');
+  }
+
+  private async interruptAndTell(poi: Poi, depth: NarrationDepth): Promise<void> {
     if (this.snapshot.status === 'narrating') {
       await this.skip();
       await this.narration;
     }
-    this.narration = this.narrate(target.poi);
+    this.narration = this.narrate(poi, depth);
     await this.narration;
   }
 
@@ -207,10 +226,11 @@ export class GuideController {
   }
 
   /** Distance and side of the place as seen from the last fix, for "On your right is…". */
-  private contextFor(poi: Poi): NarrationContext {
+  private contextFor(poi: Poi, depth: NarrationDepth): NarrationContext {
     const fix = this.lastFix;
-    if (!fix) return NO_CONTEXT;
+    if (!fix) return { ...NO_CONTEXT, depth };
     return {
+      depth,
       distanceM: distanceMeters(fix, poi),
       direction: fix.heading === null ? null : relativeDirection(bearingDegrees(fix, poi), fix.heading),
     };
@@ -225,12 +245,12 @@ export class GuideController {
     this.update({ ...this.discovery(this.snapshot.nearby), badge });
   }
 
-  private async narrate(poi: Poi): Promise<void> {
+  private async narrate(poi: Poi, depth: NarrationDepth = 'brief'): Promise<void> {
     this.update({ status: 'narrating', current: poi, narration: null });
-    log('info', `Narrating "${poi.title}" [${poi.lang}→${this.lang}]`);
+    log('info', `Narrating "${poi.title}" [${poi.lang}→${this.lang}, ${depth}]`);
     try {
       await this.markDiscovered(poi);
-      const text = await this.deps.engine.narrate(poi, this.lang, this.contextFor(poi));
+      const text = await this.deps.engine.narrate(poi, this.lang, this.contextFor(poi, depth));
       this.update({ narration: text });
       const outcome = await this.deps.speaker.speak(text, LANGUAGES[this.lang].ttsLocale);
       log(outcome === 'done' ? 'info' : 'warn', `Speech ${outcome} (${text.length} chars): ${text.slice(0, 120)}`);

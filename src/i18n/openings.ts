@@ -115,7 +115,8 @@ export function opening(lang: LanguageCode, ctx: OpeningContext, name: string, s
  */
 export function nameWithDescription(lang: LanguageCode, name: string, description: string | null): string {
   if (!description) return name;
-  if (lang === 'en' && /^[a-z]/.test(description)) {
+  // Some descriptions already start with an article ("a church in Munich").
+  if (lang === 'en' && /^[a-z]/.test(description) && !/^(?:a|an|the)\s/.test(description)) {
     // "a university", "a one-way street": these vowels are spoken as consonants.
     const vowelSound = /^[aeiou]/.test(description) && !/^(?:uni|use|usu|eu|one|once)/.test(description);
     const article = vowelSound ? 'an' : 'a';

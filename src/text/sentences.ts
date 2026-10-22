@@ -7,7 +7,8 @@ const SENTENCE_PATTERN = /[^.!?।。]+[.!?।。]+["'”’)\]]*\s*|[^.!?।。
  * common abbreviations.
  */
 const NON_TERMINAL_ENDING =
-  /(?:\b\d{1,2}|\b[IVX]{1,4}|\b\p{Lu}|\b(?:St|Dr|Mr|Mrs|Ms|Prof|Nr|Jh|bzw|ca|vgl|usw|evtl|inkl|ggf|z|u|d|v|Chr|Sr|Jr|vs|approx|no|cf))\.\s*$/u;
+  // (?:^|[^\p{L}])\p{Ll} = a lone lowercase letter ("m. b. H.", "z. B."), without lookbehind.
+  /(?:\b\d{1,2}|\b[IVX]{1,4}|\b\p{Lu}|(?:^|[^\p{L}])\p{Ll}|\b(?:St|Dr|Mr|Mrs|Ms|Prof|Nr|Jh|bzw|ca|vgl|usw|evtl|inkl|ggf|Chr|Sr|Jr|vs|approx|no|cf))\.\s*$/u;
 
 /** Splits text into sentences, keeping each sentence's trailing whitespace. */
 export function splitSentences(text: string): string[] {
@@ -23,6 +24,14 @@ export function splitSentences(text: string): string[] {
   }
   if (pending) sentences.push(pending);
   return sentences;
+}
+
+/** Drops headings and list items, which plain-text Wikipedia extracts keep as bare lines. */
+export function proseOnly(text: string): string {
+  return text
+    .split('\n')
+    .filter((line) => /[.!?।。]["'”’)\]]*\s*$/.test(line.trim()))
+    .join(' ');
 }
 
 /** Parentheticals are usually pronunciations or life dates, which TTS reads badly. */

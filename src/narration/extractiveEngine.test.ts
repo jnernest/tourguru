@@ -111,6 +111,40 @@ describe('ExtractiveEngine', () => {
     });
   });
 
+  describe('story mode ("Tell me more")', () => {
+    const article = [
+      'Karlstor is a city gate in Munich.',
+      '== History ==',
+      'In 1857 the gunpowder stocks stored in an annex to the main tower exploded and damaged the tower badly.',
+      'The gate was first mentioned in documents in the year 1302, early in the building of the second wall.',
+      '== Legends ==',
+      'According to legend, a ghost of a gatekeeper still walks the arch on stormy nights in winter.',
+    ].join('\n');
+    const gate = poiNorth('Q1', 0, { title: 'Karlstor' });
+
+    it('tells the history in order, then a fun fact', async () => {
+      const text = await new ExtractiveEngine({ loadText: async () => article }).narrate(gate, 'en', {
+        ...NO_CONTEXT,
+        depth: 'story',
+      });
+      expect(text).toMatch(/^Here is the story of Karlstor\. The gate was first mentioned .*1302.* In 1857 .* Fun fact: According to legend/);
+    });
+
+    it('admits when the article has no history to tell', async () => {
+      const text = await new ExtractiveEngine({ loadText: async () => 'Karlstor is a gate.' }).narrate(gate, 'en', {
+        ...NO_CONTEXT,
+        depth: 'story',
+      });
+      expect(text).toBe('I do not know much more about the history of Karlstor.');
+    });
+
+    it('announces a story-like highlight as a fun fact in brief mode too', async () => {
+      const describe = async () => ({ label: 'Karlstor', description: 'gate in Munich', facts: ['Built in 1302.', 'Its style is Gothic.'] });
+      const text = await new ExtractiveEngine({ loadText: async () => article, describe }).narrate(gate, 'en');
+      expect(text).toContain('Fun fact: According to legend');
+    });
+  });
+
   it('reports why translation failed, including the native error code', async () => {
     const nativeError = Object.assign(new Error('Failed to download model'), { code: 'TEXT_TRANSLATE_FAILED' });
     const onTranslationFailed = vi.fn();

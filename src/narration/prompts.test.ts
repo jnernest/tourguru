@@ -21,6 +21,20 @@ describe('buildNarrationPrompt', () => {
     expect(system).toMatch(/source may be in a different language; translate/);
   });
 
+  it('asks for a brief narration by default and a chronological story on request', () => {
+    expect(buildNarrationPrompt(poi, 'en').user).toMatch(/^Mode: brief/);
+    const article = poiNorth('3', 0, {
+      title: 'Karlstor',
+      summary: `${'Lead text. '.repeat(600)}\n== History ==\nThe gate was first mentioned in 1302.\n`,
+    });
+    const story = buildNarrationPrompt(article, 'en', { distanceM: null, direction: null, depth: 'story' });
+    expect(story.user).toMatch(/^Mode: story/);
+    // The history section leads the source, so it survives the length cap.
+    expect(story.user).toMatch(/<source>\nThe gate was first mentioned in 1302\./);
+    expect(story.system).toMatch(/chronological order/);
+    expect(story.system).toMatch(/Fun fact:/);
+  });
+
   it('keeps the system prompt identical across places and languages', () => {
     const other = poiNorth('2', 0, { title: 'Isartor', summary: 'A gate.' });
     expect(buildNarrationPrompt(poi, 'en').system).toBe(buildNarrationPrompt(other, 'hi').system);

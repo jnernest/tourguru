@@ -32,6 +32,7 @@ function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
         narration={guide.snapshot.narration}
         status={guide.snapshot.status}
         onSkip={guide.skip}
+        onMore={guide.tellMore}
       />
       {guide.error && <Text style={styles.error}>{guide.error}</Text>}
       {guide.aiNotice && <Text style={styles.notice}>{guide.aiNotice}</Text>}

@@ -69,6 +69,14 @@ async function main() {
     const title = await page.locator('[data-testid="narration"]').locator('xpath=preceding-sibling::*[1]').textContent();
     console.log(`✔ narrated "${title}":\n    ${(await narration.textContent()).slice(0, 300)}`);
 
+    await page.getByText('Tell me more', { exact: false }).click();
+    await page.waitForFunction(
+      () => document.querySelector('[data-testid="narration"]')?.textContent?.startsWith('Here is the story of'),
+      undefined,
+      { timeout: NARRATION_TIMEOUT_MS },
+    );
+    console.log(`✔ story: ${(await narration.textContent()).slice(0, 160)}…`);
+
     await page.getByText('Suggest a walk', { exact: false }).click();
     await page.getByText(/Your walk · \d+ stops/).waitFor({ timeout: 10_000 });
     console.log(`✔ walk planned: ${(await page.getByText(/Your walk · \d+ stops/).textContent()).trim()}`);

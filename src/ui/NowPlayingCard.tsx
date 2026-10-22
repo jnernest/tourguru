@@ -11,6 +11,8 @@ interface Props {
   narration: string | null;
   status: GuideStatus;
   onSkip: () => void;
+  /** History and a fun fact about this place. */
+  onMore: () => void;
 }
 
 /** Keeps portrait photos from pushing everything else off the screen. */
@@ -19,7 +21,7 @@ const MAX_ASPECT = 16 / 9;
 /** The narration is heard; the text is a reminder, unfolded on tap. */
 const COLLAPSED_LINES = 2;
 
-export function NowPlayingCard({ poi, narration, status, onSkip }: Props) {
+export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props) {
   const [expanded, setExpanded] = useState(false);
   if (!poi) {
     return (
@@ -48,11 +50,16 @@ export function NowPlayingCard({ poi, narration, status, onSkip }: Props) {
         <Text style={styles.attribution} onPress={() => void Linking.openURL(poi.url)}>
           Based on {poi.lang}.wikipedia.org (CC BY-SA 4.0){poi.image ? ' · photo: Wikimedia Commons' : ''} — open article
         </Text>
-        {narrating && (
-          <Pressable accessibilityRole="button" onPress={onSkip} style={styles.skip}>
-            <Text style={styles.skipText}>Skip</Text>
+        <View style={styles.buttons}>
+          <Pressable accessibilityRole="button" onPress={onMore} style={[styles.skip, styles.more]}>
+            <Text style={[styles.skipText, styles.moreText]}>📜 Tell me more</Text>
           </Pressable>
-        )}
+          {narrating && (
+            <Pressable accessibilityRole="button" onPress={onSkip} style={styles.skip}>
+              <Text style={styles.skipText}>Skip</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -78,4 +85,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   skipText: { color: colors.primary, fontWeight: '600' },
+  buttons: { flexDirection: 'row', gap: 8 },
+  more: { backgroundColor: colors.primary },
+  moreText: { color: colors.onPrimary },
 });

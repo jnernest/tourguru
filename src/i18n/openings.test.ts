@@ -69,6 +69,7 @@ describe('nameWithDescription', () => {
     );
     expect(nameWithDescription('en', 'Orangerie', 'orangery in Vienna')).toBe('Orangerie, an orangery in Vienna');
     expect(nameWithDescription('en', 'TU Wien', 'university in Vienna')).toBe('TU Wien, a university in Vienna');
+    expect(nameWithDescription('en', "St. Peter's", 'a church in Munich')).toBe("St. Peter's, a church in Munich");
   });
 
   it('leaves proper-noun descriptions and other languages without an article', () => {
