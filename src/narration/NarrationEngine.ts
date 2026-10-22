@@ -9,7 +9,7 @@ export const NO_CONTEXT: NarrationContext = { distanceM: null, direction: null }
 
 /**
  * Turns a place into speakable text. Implementations: ExtractiveEngine (offline: Wikidata
- * key facts, extractive summary, on-device translation), ClaudeEngine (cloud LLM).
+ * key facts, extractive summary, on-device translation), LlmEngine (cloud LLM).
  */
 export interface NarrationEngine {
   narrate(poi: Poi, lang: LanguageCode, context?: NarrationContext): Promise<string>;

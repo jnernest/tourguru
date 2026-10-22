@@ -1,16 +1,16 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { poiNorth } from '../testing/poiFactory';
-import { ClaudeEngine, type CompleteFn } from './claudeEngine';
+import { LlmEngine, type CompleteFn } from './llmEngine';
 import { ExtractiveEngine } from './extractiveEngine';
 import { FallbackEngine } from './fallbackEngine';
 
 const poi = poiNorth('1', 0, { title: 'Old Tower', summary: 'A tower. It is old.' });
 
-describe('ClaudeEngine', () => {
+describe('LlmEngine', () => {
   it('sends the grounded prompt and returns the model text', async () => {
     const complete = vi.fn<CompleteFn>(async () => 'Here stands the Old Tower.');
-    await expect(new ClaudeEngine(complete).narrate(poi, 'en')).resolves.toBe(
+    await expect(new LlmEngine(complete).narrate(poi, 'en')).resolves.toBe(
       'Here stands the Old Tower.',
     );
     expect(complete.mock.calls[0][0].user).toContain('A tower. It is old.');
@@ -21,7 +21,7 @@ describe('FallbackEngine', () => {
   it('uses the primary engine and reports success', async () => {
     const report = vi.fn();
     const engine = new FallbackEngine(
-      new ClaudeEngine(async () => 'AI text'),
+      new LlmEngine(async () => 'AI text'),
       new ExtractiveEngine(),
       report,
     );
@@ -33,7 +33,7 @@ describe('FallbackEngine', () => {
     const report = vi.fn();
     const offline = new Error('Network request failed');
     const engine = new FallbackEngine(
-      new ClaudeEngine(async () => {
+      new LlmEngine(async () => {
         throw offline;
       }),
       new ExtractiveEngine(),
@@ -48,7 +48,7 @@ describe('FallbackEngine', () => {
 
   it('passes where the place is on to the primary engine', async () => {
     const complete = vi.fn<CompleteFn>(async () => 'AI text');
-    await new FallbackEngine(new ClaudeEngine(complete), new ExtractiveEngine()).narrate(poi, 'en', {
+    await new FallbackEngine(new LlmEngine(complete), new ExtractiveEngine()).narrate(poi, 'en', {
       distanceM: 60,
       direction: 'left',
     });

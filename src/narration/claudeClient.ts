@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-import type { CompleteFn } from './claudeEngine';
+import type { CompleteFn } from './llmEngine';
 
 export const CLAUDE_MODEL = 'claude-opus-5-5';
 /** A walker has moved on after ~10 s; better to fall back than to keep waiting. */

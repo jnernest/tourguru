@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { discoveryLine } from './src/guide/discovery';
 import type { GuideSnapshot } from './src/guide/guideController';
-import { AI_NARRATION_ENABLED, OFFLINE_TRANSLATION_AVAILABLE, useGuide } from './src/guide/useGuide';
+import { AI_PROVIDER_LABEL, OFFLINE_TRANSLATION_AVAILABLE, useGuide } from './src/guide/useGuide';
 import type { LanguageCode } from './src/i18n/languages';
 import { LanguagePicker } from './src/ui/LanguagePicker';
 import { NearbyList } from './src/ui/NearbyList';
@@ -103,7 +103,7 @@ function GuideScreen() {
         Share diagnostic log
       </Text>
       <Text style={styles.footer}>
-        AI narration: {AI_NARRATION_ENABLED ? 'on' : 'off (no API key)'} · Offline translation:{' '}
+        AI narration: {AI_PROVIDER_LABEL ?? 'off (no API key)'} · Offline translation:{' '}
         {OFFLINE_TRANSLATION_AVAILABLE ? 'on' : 'not available here'} · Place data © Wikipedia
         contributors, CC BY-SA 4.0
       </Text>

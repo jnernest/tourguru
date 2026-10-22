@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ANTHROPIC_API_KEY } from '../config';
 import { createArticleLoader } from '../content/articleFetcher';
 import { createEntityDescriber } from '../content/wikidata';
 import { errorText, log } from '../diagnostics/log';
@@ -9,8 +8,8 @@ import { createMlKitTranslator } from '../translate/translator';
 import type { LanguageCode } from '../i18n/languages';
 import { lookupCountry, startLocationWatch } from '../location/locationService';
 import { startSimulatedWalk } from '../location/simulatedWalk';
-import { createClaudeComplete } from '../narration/claudeClient';
-import { ClaudeEngine } from '../narration/claudeEngine';
+import { createAiProvider } from '../narration/aiProvider';
+import { LlmEngine } from '../narration/llmEngine';
 import { ExtractiveEngine } from '../narration/extractiveEngine';
 import { FallbackEngine, type FallbackReporter } from '../narration/fallbackEngine';
 import type { NarrationEngine } from '../narration/NarrationEngine';
@@ -26,14 +25,18 @@ import { GuideController, INITIAL_SNAPSHOT, type GuideSnapshot } from './guideCo
 /** How often to re-decide while the phone sends no new fixes (e.g. sitting still). */
 const REEVALUATE_MS = 5_000;
 
-export const AI_NARRATION_ENABLED = ANTHROPIC_API_KEY.length > 0;
+const aiProvider = createAiProvider();
+export const AI_NARRATION_ENABLED = aiProvider !== null;
+/** "Gemini (gemini-3.5-flash-lite)" or null. */
+export const AI_PROVIDER_LABEL = aiProvider?.label ?? null;
 /** On-device translation; null on web and in Expo Go, where the native module is absent. */
 const translator = createMlKitTranslator();
 export const OFFLINE_TRANSLATION_AVAILABLE = translator !== null;
 
 /**
- * Claude when a key is configured; otherwise (or when offline) the on-device pipeline:
- * full article → extractive summary → ML Kit translation if needed.
+ * The configured AI (Gemini free tier, Claude, …) when there is one; otherwise, or when it
+ * fails (offline, free limit reached), the on-device pipeline: Wikidata key facts, extractive
+ * summary, ML Kit translation.
  */
 function createEngine(report: FallbackReporter, onTranslationFailed: (reason: string) => void): NarrationEngine {
   const loadText = createArticleLoader();
@@ -46,11 +49,10 @@ function createEngine(report: FallbackReporter, onTranslationFailed: (reason: st
       onTranslationFailed(reason);
     },
   });
-  if (!AI_NARRATION_ENABLED) {
+  if (!aiProvider) {
     return offline;
   }
-  const claude = new ClaudeEngine(createClaudeComplete(ANTHROPIC_API_KEY), loadText);
-  return new FallbackEngine(claude, offline, report);
+  return new FallbackEngine(new LlmEngine(aiProvider.complete, loadText), offline, report);
 }
 
 function fallbackNotice(error: unknown | null): string | null {
@@ -63,7 +65,7 @@ function fallbackNotice(error: unknown | null): string | null {
 }
 
 captureUncaughtErrors();
-log('info', `App started · AI=${AI_NARRATION_ENABLED} · offlineTranslation=${OFFLINE_TRANSLATION_AVAILABLE}`);
+log('info', `App started · AI=${AI_PROVIDER_LABEL ?? 'off'} · offlineTranslation=${OFFLINE_TRANSLATION_AVAILABLE}`);
 
 async function openStoreOrFallback(): Promise<ToldStore> {
   try {

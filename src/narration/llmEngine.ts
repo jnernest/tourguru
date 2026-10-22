@@ -7,7 +7,7 @@ import { buildNarrationPrompt, type NarrationPrompt } from './prompts';
 export type CompleteFn = (prompt: NarrationPrompt) => Promise<string>;
 
 /** Rewrites Wikipedia text into a short spoken narration via a cloud LLM. */
-export class ClaudeEngine implements NarrationEngine {
+export class LlmEngine implements NarrationEngine {
   constructor(
     private readonly complete: CompleteFn,
     /** Full article text; defaults to the lead fetched with the place. */
