@@ -36,7 +36,7 @@ Android APK (Expo EAS cloud build, Android only for on-device translation):
 
 ```bash
 npm run eas:login
-npm run apk:set-llm-key -- <gemini-key>  # optional: free AI narration (key is compiled into the APK!)
+npm run apk:set-llm-key                  # optional: copies the Gemini key from .env.local to EAS (compiled into the APK!)
 npm run apk                              # prints a download link / QR code
 ```
 
@@ -44,7 +44,8 @@ After that, ship app-code changes over the air (no new APK; the app picks them u
 next start or two):
 
 ```bash
-npm run update -- "what changed"
+npm run update                  # message = latest git commit subject
+npm run update "what changed"   # or your own message (no `--` needed, works in PowerShell)
 ```
 
 A new APK is only needed when native parts change (native modules, `app.json` plugins or

@@ -43,7 +43,7 @@
     "eas:whoami": "npx --yes eas-cli@25.1.1 whoami",
     "preapk": "node scripts/lockfile-public-registry.cjs",
     "apk": "npx --yes eas-cli@25.1.1 build --platform android --profile preview",
-    "update": "npx --yes eas-cli@25.1.1 update --channel preview --environment preview --platform android --message",
+    "update": "node scripts/eas-update.cjs",
     "apk:list": "npx --yes eas-cli@25.1.1 build:list --platform android --limit 5",
     "apk:set-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_ANTHROPIC_API_KEY",
     "apk:set-llm-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_LLM_API_KEY"
