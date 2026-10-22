@@ -36,9 +36,20 @@ Android APK (Expo EAS cloud build, Android only for on-device translation):
 
 ```bash
 npm run eas:login
-npm run apk:set-key -- <anthropic-key>   # optional: AI narration (key is compiled into the APK!)
+npm run apk:set-llm-key -- <gemini-key>  # optional: free AI narration (key is compiled into the APK!)
 npm run apk                              # prints a download link / QR code
 ```
+
+After that, ship app-code changes over the air (no new APK; the app picks them up on its
+next start or two):
+
+```bash
+npm run update -- "what changed"
+```
+
+A new APK is only needed when native parts change (native modules, `app.json` plugins or
+Android settings). The `fingerprint` runtime version makes sure an update is never delivered
+to an APK it is incompatible with.
 
 Expo Go works for the core (no on-device translation, which needs the native module in
 `modules/mlkit-translate`).
