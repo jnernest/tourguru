@@ -45,8 +45,8 @@
     "apk": "npx --yes eas-cli@25.1.1 build --platform android --profile preview",
     "update": "npx --yes eas-cli@25.1.1 update --channel preview --environment preview --platform android --message",
     "apk:list": "npx --yes eas-cli@25.1.1 build:list --platform android --limit 5",
-    "apk:set-key": "npx --yes eas-cli@25.1.1 env:set --name EXPO_PUBLIC_ANTHROPIC_API_KEY --environment preview --visibility sensitive --value",
-    "apk:set-llm-key": "npx --yes eas-cli@25.1.1 env:set --name EXPO_PUBLIC_LLM_API_KEY --environment preview --visibility sensitive --value"
+    "apk:set-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_ANTHROPIC_API_KEY",
+    "apk:set-llm-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_LLM_API_KEY"
   },
   "private": true
 }
