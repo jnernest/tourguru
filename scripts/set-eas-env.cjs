@@ -42,10 +42,11 @@ const args = [
   '--non-interactive',
 ];
 // Windows needs a shell to run npx.cmd. Every argument is validated above (no quotes, spaces
-// or shell metacharacters), so quoting each one and joining them is safe.
+// or shell metacharacters), so quoting each one and joining them is safe. The command name
+// itself must stay unquoted: a quoted "npx.cmd" makes cmd resolve npm's files from the cwd.
 const result =
   process.platform === 'win32'
-    ? spawnSync(['npx.cmd', ...args].map((a) => `"${a}"`).join(' '), { stdio: ['ignore', 'inherit', 'inherit'], shell: true })
+    ? spawnSync(`npx.cmd ${args.map((a) => `"${a}"`).join(' ')}`, { stdio: ['ignore', 'inherit', 'inherit'], shell: true })
     : spawnSync('npx', args, { stdio: ['ignore', 'inherit', 'inherit'] });
 if (result.status !== 0) fail(`eas env:set failed (exit ${result.status}).`);
 console.log(`✔ ${NAME} is set for EAS preview builds and updates (value not shown).`);
