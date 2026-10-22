@@ -3,7 +3,7 @@ plugins {
   id 'expo-module-gradle-plugin'
 }
 
-group = 'com.walkguide'
+group = 'com.jnernest.tourguide'
 version = '0.1.0'
 
 android {

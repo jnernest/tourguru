@@ -91,7 +91,7 @@ function GuideScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.appTitle}>Walk Guide</Text>
+      <Text style={styles.appTitle}>TourGuide</Text>
       <LanguagePicker value={lang} onChange={setLang} />
       <NearbyList
         items={guide.snapshot.nearby}

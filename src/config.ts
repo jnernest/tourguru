@@ -3,7 +3,7 @@
  * https://foundation.wikimedia.org/wiki/Policy:User-Agent_policy
  * Replace the contact with a real address before any public release.
  */
-export const USER_AGENT = 'WalkGuide/0.1 (prototype; contact: walkguide@example.invalid)';
+export const USER_AGENT = 'TourGuide/0.1 (prototype; contact: tourguide@example.invalid)';
 
 /**
  * Read from `.env.local` (gitignored) at bundle time. Empty = AI narration off, and the app

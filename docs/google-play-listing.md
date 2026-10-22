@@ -4,7 +4,7 @@ Copy into Play Console. Limits: app name 30 chars, short description 80, full de
 
 ## App name (≤ 30)
 
-`Walk Guide – Audio Tour` _(or the final brand name; must match `expo.name`)_
+`TourGuide – Audio Tour` _(or the final brand name; must match `expo.name`)_
 
 ## Short description (≤ 80)
 
@@ -15,7 +15,7 @@ Copy into Play Console. Limits: app name 30 chars, short description 80, full de
 ```
 Walk anywhere and let the guide talk.
 
-Walk Guide uses your location to find interesting places around you and tells you about them
+TourGuide uses your location to find interesting places around you and tells you about them
 out loud, in your language, like a personal tour guide:
 
 • Speaks up on its own as you walk past a sight, and tells you where to look:
@@ -32,7 +32,7 @@ out loud, in your language, like a personal tour guide:
 No account, no ads, no tracking.
 
 Place information from Wikipedia (CC BY-SA 4.0) and Wikidata (CC0); photos from Wikimedia
-Commons. Walk Guide is not affiliated with the Wikimedia Foundation.
+Commons. TourGuide is not affiliated with the Wikimedia Foundation.
 ```
 
 ## Category and tags
@@ -80,7 +80,7 @@ PEGI 3**.
 
 ## Release steps
 
-1. Play Console → **Create app** (package name `com.walkguide.app` — permanent!).
+1. Play Console → **Create app** (package name `com.jnernest.tourguide` — permanent!).
 2. Upload the Google service account key to expo.dev (Credentials → Android → Service credentials).
 3. `npm run store:build` → `npm run store:submit` (uploads to **Internal testing** as a draft).
 4. Fill in listing, content rating, target audience, data safety, privacy policy URL.

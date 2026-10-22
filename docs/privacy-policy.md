@@ -1,8 +1,8 @@
-# Privacy Policy — Walk Guide
+# Privacy Policy — TourGuide
 
 _Last updated: 2026-10-22_
 
-Walk Guide ("the app") is a walking tour guide: it uses your location to find places near you
+TourGuide ("the app") is a walking tour guide: it uses your location to find places near you
 and tells you about them. This policy explains what data the app uses and where it goes.
 
 **In short:** there are no accounts, no ads, no analytics and no tracking. The developer runs no

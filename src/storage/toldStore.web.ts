@@ -5,7 +5,7 @@ import type { ToldStore } from './toldStore';
 
 export type { ToldStore } from './toldStore';
 
-const STORAGE_KEY = 'walkguide.told';
+const STORAGE_KEY = 'tourguide.told';
 
 export async function openToldStore(): Promise<ToldStore> {
   const ids = new Set<string>(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as string[]);

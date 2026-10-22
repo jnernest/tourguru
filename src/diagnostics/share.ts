@@ -25,6 +25,6 @@ export function captureUncaughtErrors(): void {
 /** Opens the system share sheet with the diagnostic log (email, chat, notes…). */
 export async function shareDiagnostics(context: Record<string, string>): Promise<void> {
   const details = Object.entries(context).map(([k, v]) => `${k}=${v}`).join(' ');
-  const header = `Walk Guide diagnostics · ${Platform.OS} ${String(Platform.Version)} · ${details}`;
-  await Share.share({ title: 'Walk Guide log', message: formatLog(header) });
+  const header = `TourGuide diagnostics · ${Platform.OS} ${String(Platform.Version)} · ${details}`;
+  await Share.share({ title: 'TourGuide log', message: formatLog(header) });
 }

@@ -50,7 +50,7 @@ async function main() {
 
   try {
     await page.goto(`http://localhost:${PORT}/`);
-    await page.getByText('Walk Guide', { exact: true }).waitFor({ timeout: 30_000 });
+    await page.getByText('TourGuide', { exact: true }).waitFor({ timeout: 30_000 });
     console.log('✔ app rendered');
     if (pageErrors.length) throw new Error(`page error on load: ${pageErrors[0]}`);
 

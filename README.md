@@ -1,4 +1,4 @@
-# TourGuru (Walk Guide)
+# TourGuide
 
 A GPS-aware tour guide for your phone. As you walk, it finds places around you on Wikipedia
 and Wikidata and tells you about them out loud, in your language, the way a guide would:

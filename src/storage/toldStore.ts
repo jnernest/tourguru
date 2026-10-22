@@ -9,7 +9,7 @@ export interface ToldStore {
   clear(): Promise<void>;
 }
 
-const DB_NAME = 'walkguide.db';
+const DB_NAME = 'tourguide.db';
 
 export async function openToldStore(): Promise<ToldStore> {
   const db = await SQLite.openDatabaseAsync(DB_NAME);

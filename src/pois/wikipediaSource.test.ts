@@ -109,7 +109,7 @@ describe('createWikipediaSource', () => {
     }));
     await createWikipediaSource(fetchFn).nearby(MARIENPLATZ, 500, 'en');
     const headers = fetchFn.mock.calls[0][1].headers;
-    expect(headers['User-Agent']).toMatch(/^WalkGuide\/\S+ \(.*contact/);
+    expect(headers['User-Agent']).toMatch(/^TourGuide\/\S+ \(.*contact/);
   });
 
   it('throws on HTTP errors', async () => {

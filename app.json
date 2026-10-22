@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Walk Guide",
+    "name": "TourGuide",
     "slug": "walk-guide",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.walkguide.app",
+      "package": "com.jnernest.tourguide",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -37,7 +37,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Walk Guide uses your location to tell you about places you walk past. It is only sent to Wikipedia to look up nearby articles."
+          "locationWhenInUsePermission": "TourGuide uses your location to tell you about places you walk past. It is only sent to Wikipedia to look up nearby articles."
         }
       ],
       [
