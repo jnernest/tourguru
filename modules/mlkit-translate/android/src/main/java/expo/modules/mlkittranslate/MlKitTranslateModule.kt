@@ -12,7 +12,13 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * On-device translation with Google ML Kit. Replaces @react-native-ml-kit/translate-text,
+ * whose first call crashed inside ML Kit ("Attempt to read from field ... on a null object
+ * reference"): this module initialises ML Kit explicitly and reports full error details.
+ */
 class MlKitTranslateModule : Module() {
+  /** One translator per language pair, so a downloaded model stays loaded between calls. */
   private val translators = ConcurrentHashMap<String, Translator>()
 
   override fun definition() = ModuleDefinition {
@@ -53,7 +59,7 @@ class MlKitTranslateModule : Module() {
       )
     }
 
-  // ML Kit normally self-initialises via a content provider; do it explicitly in case it did not.
+  /** ML Kit normally self-initialises via a content provider; do it explicitly in case it did not. */
   private fun ensureMlKitInitialised(context: Context) {
     try {
       MlKit.initialize(context)
@@ -62,6 +68,7 @@ class MlKitTranslateModule : Module() {
     }
   }
 
+  /** Exception type, message, cause chain and top stack frames: enough to debug from a share log. */
   private fun describe(e: Throwable): String {
     val chain = generateSequence(e) { it.cause }.take(4)
       .joinToString(" <- ") { "${it.javaClass.name}: ${it.message}" }
