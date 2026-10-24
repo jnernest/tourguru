@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { poiNorth } from '../testing/poiFactory';
-import { createOsmSource, mergeOsm, overpassQuery, parseOverpass, type PostFetch } from './osmSource';
+import { ORIGIN, poiNorth } from '../testing/poiFactory';
+import { createOsmSource, mergeOsm, overpassQuery, parseOverpass, withOsm, type OsmPlace, type PostFetch } from './osmSource';
 
 const BODY = {
   elements: [
@@ -55,5 +55,27 @@ describe('mergeOsm', () => {
     expect(places.map((p) => p.id)).toEqual(['Q1418064', 'osm:way/2']);
     expect(hours.get('Q1418064')).toBe('Mo-Su 09:00-17:00');
     expect(hours.get('osm:way/2')).toBe('24/7');
+  });
+});
+
+describe('withOsm', () => {
+  const wiki = { nearby: async () => [poiNorth('Q1418064', 10, { title: 'Karlstor' })] };
+  const osmPlace = (id: string, wikidataId: string | null, openingHours: string | null) =>
+    ({ ...poiNorth(id, 20), kind: 'museum', inscription: null, wikidataId, openingHours }) as OsmPlace;
+
+  it('adds opening hours to Wikipedia places and appends OSM-only places', async () => {
+    const source = withOsm(wiki, async () => [osmPlace('Q1418064', 'Q1418064', 'Mo-Su 10:00-18:00'), osmPlace('osm:node/5', null, null)]);
+    const places = await source.nearby(ORIGIN, 500, 'en');
+    expect(places.map((p) => [p.id, p.openingHours ?? null])).toEqual([
+      ['Q1418064', 'Mo-Su 10:00-18:00'],
+      ['osm:node/5', null],
+    ]);
+  });
+
+  it('never lets a slow or failing Overpass server hold up the Wikipedia places', async () => {
+    const slow = withOsm(wiki, () => new Promise(() => undefined), 20);
+    expect((await slow.nearby(ORIGIN, 500, 'en')).map((p) => p.id)).toEqual(['Q1418064']);
+    const failing = withOsm(wiki, async () => Promise.reject(new Error('504')));
+    expect((await failing.nearby(ORIGIN, 500, 'en')).map((p) => p.id)).toEqual(['Q1418064']);
   });
 });

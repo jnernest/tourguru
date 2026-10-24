@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGuideContext } from '../guide/GuideContext';
 import { AI_PROVIDER_LABEL, OFFLINE_TRANSLATION_AVAILABLE } from '../guide/useGuide';
 import { LANGUAGES } from '../i18n/languages';
+import { OfflinePackSection } from '../ui/OfflinePackSection';
 import { SettingsPanel } from '../ui/SettingsPanel';
 import { colors } from '../ui/theme';
 
@@ -19,6 +20,7 @@ export function SettingsScreen() {
           ttsLocale={LANGUAGES[lang].ttsLocale}
           aiAvailable={AI_PROVIDER_LABEL !== null}
         />
+        <OfflinePackSection position={guide.snapshot.position} lang={lang} />
         <Pressable accessibilityRole="button" onPress={guide.resetHistory} style={styles.button}>
           <Text style={styles.buttonText}>Reset history (hear every place again)</Text>
         </Pressable>

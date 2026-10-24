@@ -94,6 +94,11 @@ async function main() {
     console.log(`    ${(await page.getByText(/^Next: /).textContent()).trim()}`);
     await page.getByText('Open in Google Maps').waitFor({ timeout: 5_000 });
     console.log(`✔ discovery: ${(await page.getByText(/in total/).first().textContent()).trim()}`);
+    await page.getByText('🖼 Then & now').click();
+    const gallery = page.getByTestId('gallery').or(page.getByText(/No photo collection|Could not load photos/));
+    await gallery.first().waitFor({ timeout: 30_000 });
+    const photos = await page.getByTestId('gallery').locator('img').count();
+    console.log(`✔ gallery: ${photos ? `${photos} photos` : (await gallery.first().textContent()).trim()}`);
     const tab = (name) => page.getByText(name, { exact: true }).last();
     await tab('Map').click();
     await page.getByTestId('place-map').getByText(/ m$/).first().waitFor({ timeout: 10_000 });
@@ -115,6 +120,13 @@ async function main() {
       throw new Error(`settings not saved: ${JSON.stringify(saved)}`);
     }
     console.log(`✔ settings saved: ${JSON.stringify({ tone: saved.tone, interests: saved.interests, speechRate: saved.speechRate })}`);
+    const started = Date.now();
+    await page.getByText('📦 Download this area').click();
+    await page.getByTestId('pack-status').getByText(/^Saved: \d+ places|^Download failed/).waitFor({ timeout: 240_000 });
+    const packStatus = (await page.getByTestId('pack-status').textContent()).trim();
+    if (packStatus.startsWith('Download failed')) throw new Error(packStatus);
+    const packKb = await page.evaluate(() => Math.round((localStorage.getItem('tourguide.cityPack') ?? '').length / 1024));
+    console.log(`✔ offline pack: ${packStatus} (${packKb} KB, ${Math.round((Date.now() - started) / 1000)} s)`);
     await page.screenshot({ path: SCREENSHOT, fullPage: true });
     console.log(`✔ screenshot: ${SCREENSHOT}`);
     if (pageErrors.length) throw new Error(`page error during walk: ${pageErrors[0]}`);

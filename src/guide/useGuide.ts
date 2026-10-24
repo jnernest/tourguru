@@ -5,15 +5,12 @@ import { captureUncaughtErrors, shareDiagnostics } from '../diagnostics/share';
 import type { LanguageCode } from '../i18n/languages';
 import type { Fix } from '../location/fix';
 import { startBackgroundWatch } from '../location/backgroundLocation';
-import { lookupCountry, startLocationWatch } from '../location/locationService';
+import { startLocationWatch } from '../location/locationService';
 import { startSimulatedWalk } from '../location/simulatedWalk';
 import { LlmEngine } from '../narration/llmEngine';
 import { ExtractiveEngine } from '../narration/extractiveEngine';
 import { FallbackEngine, type FallbackReporter } from '../narration/fallbackEngine';
 import type { NarrationEngine } from '../narration/NarrationEngine';
-import { createLocalLanguageResolver } from '../pois/localLanguage';
-import { createMultiLanguageSource } from '../pois/multiLanguageSource';
-import { createWikipediaSource } from '../pois/wikipediaSource';
 import { planRoute, type RoutePlan } from '../route/planner';
 import type { Settings } from '../settings/settings';
 import { loadSettings, saveSettings } from '../settings/settingsStore';
@@ -30,6 +27,7 @@ import {
   loadArticle,
   lookupBusinesses,
   OFFLINE_TRANSLATION_AVAILABLE,
+  placeSource,
   translator,
 } from './services';
 
@@ -103,10 +101,7 @@ export function useGuide(lang: LanguageCode) {
       toldRef.current = told;
       controllerRef.current = new GuideController(
         {
-          source: createMultiLanguageSource(
-            createWikipediaSource(),
-            createLocalLanguageResolver(lookupCountry),
-          ),
+          source: placeSource,
           engine: createEngine(
             (e) => setAiNotice(fallbackNotice(e)),
             (reason) => setTranslationNotice(`Offline translation failed: ${reason}`),

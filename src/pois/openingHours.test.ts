@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { openState } from './openingHours';
+import { openLabel, openState } from './openingHours';
 
 // 2026-10-21 is a Wednesday.
 const at = (day: number, time: string) => new Date(`2026-10-${String(day).padStart(2, '0')}T${time}:00`);
@@ -26,5 +26,15 @@ describe('openState', () => {
     expect(openState('Mo-Fr 09:00-17:00; PH off', at(21, '10:00'))).toBe('unknown');
     expect(openState('sunrise-sunset', at(21, '10:00'))).toBe('unknown');
     expect(openState('by appointment', at(21, '10:00'))).toBe('unknown');
+  });
+});
+
+describe('openLabel', () => {
+  const wednesdayNoon = new Date(2026, 9, 21, 12, 0);
+  it('says open or closed now, and nothing when unknown', () => {
+    expect(openLabel('Mo-Fr 09:00-17:00', wednesdayNoon)).toBe('open now');
+    expect(openLabel('Mo-Fr 13:00-17:00', wednesdayNoon)).toBe('closed now');
+    expect(openLabel('Mo-Fr 09:00-17:00; PH off', wednesdayNoon)).toBeNull();
+    expect(openLabel(null, wednesdayNoon)).toBeNull();
   });
 });

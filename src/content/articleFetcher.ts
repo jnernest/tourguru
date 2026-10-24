@@ -17,6 +17,7 @@ export function buildArticleUrl(poi: Pick<Poi, 'lang' | 'pageId'>): string {
 export function createArticleLoader(fetchFn: FetchLike = fetch) {
   const cache = new Map<string, string>();
   return async (poi: Poi): Promise<string> => {
+    if (!poi.pageId) return poi.summary;
     const key = `${poi.lang}:${poi.pageId}`;
     const cached = cache.get(key);
     if (cached !== undefined) return cached;

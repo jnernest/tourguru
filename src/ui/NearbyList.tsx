@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
 
+import { openLabel } from '../pois/openingHours';
 import type { RankedPoi } from '../pois/poiRanker';
 import { PlaceImage } from './PlaceImage';
 import { colors } from './theme';
@@ -15,6 +16,11 @@ interface Props {
 
 function formatDistance(m: number): string {
   return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`;
+}
+
+function hoursLabel(spec: string | null | undefined): string {
+  const label = openLabel(spec, new Date());
+  return label ? ` · ${label}` : '';
 }
 
 export function NearbyList({ items, lang, onSelect, header, discoveredIds }: Props) {
@@ -44,6 +50,7 @@ export function NearbyList({ items, lang, onSelect, header, discoveredIds }: Pro
             {formatDistance(item.distanceM)}
             {item.ahead ? ' · ahead' : ''}
             {item.poi.lang !== lang ? ` · ${item.poi.lang.toUpperCase()}` : ''}
+            {hoursLabel(item.poi.openingHours)}
           </Text>
         </Pressable>
       )}

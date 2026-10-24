@@ -1,6 +1,7 @@
 import { USER_AGENT } from '../config';
+import { errorText, log } from '../diagnostics/log';
 import type { LatLon } from '../geo/geo';
-import type { Poi } from './types';
+import type { Poi, PoiSource } from './types';
 
 export const OVERPASS_SERVERS = [
   'https://overpass-api.de/api/interpreter',
@@ -86,9 +87,14 @@ export function createOsmSource(fetchFn: PostFetch = fetch, servers = OVERPASS_S
           body,
           signal: AbortSignal.timeout(SERVER_TIMEOUT_MS),
         });
-        if (res.ok) return parseOverpass(await res.json(), lang);
-      } catch {
-        // Next server.
+        if (res.ok) {
+          const places = parseOverpass(await res.json(), lang);
+          log('info', `OSM: ${places.length} places from ${new URL(server).host}`);
+          return places;
+        }
+        log('warn', `OSM: ${new URL(server).host} answered HTTP ${res.status}`);
+      } catch (e) {
+        log('warn', `OSM: ${new URL(server).host} failed: ${errorText(e)}`);
       }
     }
     return [];
@@ -107,4 +113,37 @@ export function mergeOsm(wikiPlaces: Poi[], osm: OsmPlace[]): { places: Poi[]; h
   const extra = osm.filter((o) => !known.has(o.id));
   for (const o of extra) if (o.openingHours) hours.set(o.id, o.openingHours);
   return { places: [...wikiPlaces, ...extra], hours };
+}
+
+export type OsmLookup = (center: LatLon, radiusM: number, lang: string) => Promise<OsmPlace[]>;
+
+const OSM_BUDGET_MS = 5_000;
+
+function within<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(fallback), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      () => {
+        clearTimeout(timer);
+        resolve(fallback);
+      },
+    );
+  });
+}
+
+export function withOsm(base: PoiSource, osm: OsmLookup, budgetMs = OSM_BUDGET_MS): PoiSource {
+  return {
+    async nearby(center, radiusM, lang) {
+      const [wiki, extra] = await Promise.all([
+        base.nearby(center, radiusM, lang),
+        within(osm(center, radiusM, lang), budgetMs, [] as OsmPlace[]),
+      ]);
+      const { places, hours } = mergeOsm(wiki, extra);
+      return places.map((p) => (hours.has(p.id) ? { ...p, openingHours: hours.get(p.id) } : p));
+    },
+  };
 }

@@ -12,6 +12,7 @@ export interface Poi extends LatLon {
   pageId: number;
   url: string;
   image: PoiImage | null;
+  openingHours?: string | null;
 }
 
 export interface PoiImage {

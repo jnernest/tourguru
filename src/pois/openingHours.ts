@@ -55,3 +55,9 @@ export function openState(spec: string, now: Date): OpenState {
   const open = today.ranges.some(([from, to]) => (to > from ? minutes >= from && minutes < to : minutes >= from || minutes < to));
   return open ? 'open' : 'closed';
 }
+
+export function openLabel(spec: string | null | undefined, now: Date): string | null {
+  if (!spec) return null;
+  const state = openState(spec, now);
+  return state === 'unknown' ? null : state === 'open' ? 'open now' : 'closed now';
+}

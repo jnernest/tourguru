@@ -3,7 +3,9 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { GuideStatus } from '../guide/guideController';
 import type { Poi } from '../pois/types';
+import { openLabel } from '../pois/openingHours';
 import { googleMapsWalkToUrl } from '../route/planner';
+import { GalleryStrip } from './GalleryStrip';
 import { PlaceImage } from './PlaceImage';
 import { colors } from './theme';
 
@@ -23,6 +25,7 @@ const COLLAPSED_LINES = 2;
 
 export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz, onShare }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [galleryFor, setGalleryFor] = useState<string | null>(null);
   if (!poi) {
     return (
       <View style={[styles.card, styles.padded]}>
@@ -31,12 +34,16 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz,
     );
   }
   const narrating = status === 'narrating';
+  const hours = openLabel(poi.openingHours, new Date());
   const aspect = poi.image ? Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, poi.image.width / poi.image.height)) : MAX_ASPECT;
   return (
     <View style={styles.card}>
       <PlaceImage image={poi.image} title={poi.title} style={[styles.photo, { aspectRatio: aspect }]} />
       <View style={styles.padded}>
-        <Text style={styles.label}>{narrating ? 'Now telling' : 'Last place'}</Text>
+        <Text style={styles.label}>
+          {narrating ? 'Now telling' : 'Last place'}
+          {hours ? ` · ${hours}` : ''}
+        </Text>
         <Text style={styles.title}>{poi.title}</Text>
         <Text
           style={styles.narration}
@@ -48,7 +55,9 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz,
         </Text>
         {/* CC BY-SA 4.0 requires attribution and a link to the source. */}
         <Text style={styles.attribution} onPress={() => void Linking.openURL(poi.url)}>
-          Based on {poi.lang}.wikipedia.org (CC BY-SA 4.0){poi.image ? ' · photo: Wikimedia Commons' : ''} — open article
+          {poi.pageId
+            ? `Based on ${poi.lang}.wikipedia.org (CC BY-SA 4.0)${poi.image ? ' · photo: Wikimedia Commons' : ''} — open article`
+            : 'From OpenStreetMap (© contributors, ODbL) — open on the map'}
         </Text>
         <View style={styles.buttons}>
           <Pressable accessibilityRole="button" onPress={onMore} style={[styles.skip, styles.more]}>
@@ -62,6 +71,15 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz,
           >
             <Text style={styles.skipText}>🧭 Walk there</Text>
           </Pressable>
+          {/^Q\d+$/.test(poi.id) && (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setGalleryFor(galleryFor === poi.id ? null : poi.id)}
+              style={styles.skip}
+            >
+              <Text style={styles.skipText}>🖼 Then & now</Text>
+            </Pressable>
+          )}
           <Pressable accessibilityRole="button" onPress={onQuiz} style={styles.skip}>
             <Text style={styles.skipText}>🎯 Quiz</Text>
           </Pressable>
@@ -74,6 +92,7 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz,
             </Pressable>
           )}
         </View>
+        {galleryFor === poi.id && <GalleryStrip key={poi.id} wikidataId={poi.id} />}
       </View>
     </View>
   );
