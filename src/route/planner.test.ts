@@ -50,6 +50,17 @@ describe('planRoute', () => {
     expect(ids).toEqual(expect.arrayContaining(['church', 'hall', 'gate']));
   });
 
+  it('leaves out excluded places such as businesses and prefers the most viewed sights', () => {
+    const pois = [
+      poiNorth('bank', 50, { title: 'Private Bank', articleLength: 90_000, pageViews: 300 }),
+      poiNorth('palace', 300, { title: 'Palace', articleLength: 20_000, pageViews: 50_000 }),
+      poiNorth('church', 200, { title: 'Church', articleLength: 20_000, pageViews: 5_000 }),
+      poiNorth('gate', 100, { title: 'Gate', articleLength: 9_000, pageViews: 2_000 }),
+    ];
+    const plan = planRoute(ORIGIN, rankPois(pois, here, 500), never, new Set(['bank']));
+    expect(plan?.stops.map((s) => s.id).sort()).toEqual(['church', 'gate', 'palace']);
+  });
+
   it('returns null when there is not enough for a walk', () => {
     expect(planRoute(ORIGIN, rankPois([poiNorth('a', 50), poiNorth('b', 80)], here, 500), never)).toBeNull();
   });

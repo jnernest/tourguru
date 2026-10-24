@@ -17,9 +17,14 @@ const PROXIMITY_WEIGHT = 0.6;
 const RICHNESS_WEIGHT = 0.25;
 const AHEAD_WEIGHT = 0.15;
 const RICHNESS_LOG_CAP = 5;
+const POPULARITY_LOG_CAP = 4.5;
 
-function richness(articleLength: number): number {
-  return Math.min(Math.log10(Math.max(articleLength, 1)) / RICHNESS_LOG_CAP, 1);
+// Half how much there is to tell (article size), half how well known it is (monthly views).
+export function richness(poi: Pick<Poi, 'articleLength' | 'pageViews'>): number {
+  const article = Math.min(Math.log10(Math.max(poi.articleLength, 1)) / RICHNESS_LOG_CAP, 1);
+  if (poi.pageViews <= 0) return article;
+  const popularity = Math.min(Math.log10(poi.pageViews + 1) / POPULARITY_LOG_CAP, 1);
+  return (article + popularity) / 2;
 }
 
 function isAhead(position: Position, poi: Poi): boolean {
@@ -37,7 +42,7 @@ export function rankPois(pois: Poi[], position: Position, radiusM: number): Rank
       const proximity = Math.max(0, 1 - distanceM / radiusM);
       const score =
         proximity * PROXIMITY_WEIGHT +
-        richness(poi.articleLength) * RICHNESS_WEIGHT +
+        richness(poi) * RICHNESS_WEIGHT +
         (ahead ? AHEAD_WEIGHT : 0);
       return { poi, distanceM, ahead, score };
     })

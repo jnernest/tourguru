@@ -7,6 +7,7 @@ export interface Poi extends LatLon {
   title: string;
   summary: string;
   articleLength: number;
+  pageViews: number;
   lang: WikiLang;
   pageId: number;
   url: string;

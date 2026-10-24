@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createArticleLoader } from '../content/articleFetcher';
 import { createEntityDescriber } from '../content/wikidata';
+import { createBusinessLookup } from '../content/wikidataTypes';
 import { errorText, log } from '../diagnostics/log';
 import { captureUncaughtErrors, shareDiagnostics } from '../diagnostics/share';
 import { createMlKitTranslator } from '../translate/translator';
@@ -28,6 +29,7 @@ const aiProvider = createAiProvider();
 export const AI_NARRATION_ENABLED = aiProvider !== null;
 export const AI_PROVIDER_LABEL = aiProvider?.label ?? null;
 const translator = createMlKitTranslator();
+const lookupBusinesses = createBusinessLookup();
 export const OFFLINE_TRANSLATION_AVAILABLE = translator !== null;
 
 function createEngine(report: FallbackReporter, onTranslationFailed: (reason: string) => void): NarrationEngine {
@@ -174,14 +176,16 @@ export function useGuide(lang: LanguageCode) {
   }, []);
   const isTold = useCallback((poiId: string) => controllerRef.current?.isTold(poiId) ?? false, []);
 
-  const planWalk = useCallback(() => {
+  const planWalk = useCallback(async () => {
     const controller = controllerRef.current;
     const position = controller?.state.position;
     if (!controller || !position) {
       setStartError('Start a walk first, so I know where you are.');
       return;
     }
-    const plan = planRoute(position, controller.state.nearby, (id) => controller.isTold(id));
+    const nearby = controller.state.nearby;
+    const businesses = await lookupBusinesses(nearby.map((r) => r.poi.id));
+    const plan = planRoute(position, nearby, (id) => controller.isTold(id), businesses);
     if (!plan) {
       setStartError('Not enough new places nearby for a walk yet. Try a bit further on.');
       return;

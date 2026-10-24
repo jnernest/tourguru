@@ -10,6 +10,7 @@ export function poiNorth(id: string, metresNorth: number, overrides: Partial<Poi
     title: `Place ${id}`,
     summary: `Place ${id} is a test place. It has a history.`,
     articleLength: 5_000,
+    pageViews: 0,
     lat: ORIGIN.lat + metresNorth / M_PER_DEG_LAT,
     lon: ORIGIN.lon,
     lang: 'en',

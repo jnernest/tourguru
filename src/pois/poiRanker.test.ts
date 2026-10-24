@@ -29,6 +29,12 @@ describe('rankPois', () => {
     expect(rankPois([poiNorth('a', 100)], standing, 500)[0].ahead).toBe(false);
   });
 
+  it('lets a famous place outrank a slightly closer one nobody reads about', () => {
+    const quiet = poiNorth('quiet', 80, { articleLength: 20_000, pageViews: 30 });
+    const famous = poiNorth('famous', 110, { articleLength: 20_000, pageViews: 5_000 });
+    expect(rankPois([quiet, famous], standing, 500)[0].poi.id).toBe('famous');
+  });
+
   it('lets a much richer article outrank a slightly closer stub', () => {
     const stub = poiNorth('stub', 80, { articleLength: 300 });
     const rich = poiNorth('rich', 100, { articleLength: 90_000 });

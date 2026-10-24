@@ -46,6 +46,13 @@ describe('parseGeoQueryResponse', () => {
     expect(frauenkirche?.summary.length).toBeGreaterThan(50);
   });
 
+  it('sums the last 30 days of page views', () => {
+    const frauenkirche = parseGeoQueryResponse(enFixture, 'en').find((p) => p.id === 'Q167193');
+    expect(frauenkirche?.pageViews).toBeGreaterThan(1_000);
+    const body = { query: { pages: [{ pageid: 1, title: 'X', coordinates: [{ lat: 1, lon: 2 }], extract: 'T.', pageviews: { a: 3, b: null, c: 4 } }] } };
+    expect(parseGeoQueryResponse(body, 'en')[0].pageViews).toBe(7);
+  });
+
   it('keeps the article picture from Wikimedia', () => {
     const frauenkirche = parseGeoQueryResponse(enFixture, 'en').find((p) => p.id === 'Q167193');
     expect(frauenkirche?.image).toMatchObject({
@@ -109,7 +116,7 @@ describe('createWikipediaSource', () => {
     }));
     await createWikipediaSource(fetchFn).nearby(MARIENPLATZ, 500, 'en');
     const headers = fetchFn.mock.calls[0][1].headers;
-    expect(headers['User-Agent']).toMatch(/^TourGuide\/\S+ \(.*contact/);
+    expect(headers['User-Agent']).toMatch(/^TourGuide\/\S+ \(\+https:\/\/github\.com\/\S+\)$/);
   });
 
   it('throws on HTTP errors', async () => {

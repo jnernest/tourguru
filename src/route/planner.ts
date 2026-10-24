@@ -1,5 +1,5 @@
 import { distanceMeters, type LatLon } from '../geo/geo';
-import type { RankedPoi } from '../pois/poiRanker';
+import { richness, type RankedPoi } from '../pois/poiRanker';
 import type { Poi } from '../pois/types';
 
 export interface RoutePlan {
@@ -60,12 +60,17 @@ function twoOpt<T extends LatLon>(start: LatLon, stops: T[]): T[] {
   return route;
 }
 
-export function planRoute(start: LatLon, ranked: RankedPoi[], isTold: (id: string) => boolean): RoutePlan | null {
+export function planRoute(
+  start: LatLon,
+  ranked: RankedPoi[],
+  isTold: (id: string) => boolean,
+  excluded: ReadonlySet<string> = new Set(),
+): RoutePlan | null {
   // Chosen for sights, not closeness; the stable sort keeps the ranking order among equals.
   const picked = ranked
     .map((r) => r.poi)
-    .filter((poi) => !isTold(poi.id) && !isTransportStop(poi.title))
-    .sort((a, b) => b.articleLength - a.articleLength)
+    .filter((poi) => !isTold(poi.id) && !excluded.has(poi.id) && !isTransportStop(poi.title))
+    .sort((a, b) => richness(b) - richness(a))
     .slice(0, MAX_STOPS);
   if (picked.length < MIN_STOPS) {
     return null;

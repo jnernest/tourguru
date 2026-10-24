@@ -75,7 +75,7 @@ function WalkTools({ guide }: { guide: ReturnType<typeof useGuide> }) {
         <Text style={styles.secondaryText}>🔊 What’s around me?</Text>
       </Pressable>
       {!guide.route && (
-        <Pressable accessibilityRole="button" onPress={guide.planWalk} style={[styles.simulate, styles.tool]}>
+        <Pressable accessibilityRole="button" onPress={() => void guide.planWalk()} style={[styles.simulate, styles.tool]}>
           <Text style={styles.secondaryText}>🗺 Suggest a walk</Text>
         </Pressable>
       )}

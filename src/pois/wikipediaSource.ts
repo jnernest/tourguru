@@ -24,6 +24,7 @@ interface WikiPage {
   coordinates?: { lat: number; lon: number }[];
   pageprops?: { wikibase_item?: string };
   thumbnail?: { source: string; width: number; height: number };
+  pageviews?: Record<string, number | null>;
 }
 interface GeoQueryResponse {
   query?: { pages?: WikiPage[] };
@@ -52,7 +53,8 @@ export function buildGeoQueryUrl(center: LatLon, radiusM: number, lang: WikiLang
     ggscoord: `${center.lat}|${center.lon}`,
     ggsradius: String(Math.min(Math.round(radiusM), MAX_RADIUS_M)),
     ggslimit: String(MAX_RESULTS),
-    prop: 'coordinates|extracts|info|pageprops|pageimages',
+    prop: 'coordinates|extracts|info|pageprops|pageimages|pageviews',
+    pvipdays: '30',
     // Without colimit only the first 10 pages get coordinates and the rest are dropped.
     colimit: String(MAX_RESULTS),
     piprop: 'thumbnail',
@@ -76,6 +78,7 @@ function toPoi(page: WikiPage, lang: WikiLang): Poi | null {
     title: page.title,
     summary,
     articleLength: page.length ?? summary.length,
+    pageViews: Object.values(page.pageviews ?? {}).reduce<number>((sum, v) => sum + (v ?? 0), 0),
     lat: coord.lat,
     lon: coord.lon,
     lang,

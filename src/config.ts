@@ -1,4 +1,4 @@
-export const USER_AGENT = 'TourGuide/0.1 (prototype; contact: tourguide@example.invalid)';
+export const USER_AGENT = 'TourGuide/0.1 (+https://github.com/jnernest/tourguru)';
 
 // Must stay a literal process.env.EXPO_PUBLIC_* expression for Expo to inline it.
 export const ANTHROPIC_API_KEY = process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY ?? '';
