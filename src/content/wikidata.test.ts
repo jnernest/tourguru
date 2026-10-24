@@ -60,6 +60,7 @@ describe('createEntityDescriber', () => {
         'Its style is Baroque.',
         'Heritage status: part of UNESCO World Heritage Site.',
       ],
+      builtYear: 1638,
     });
   });
 

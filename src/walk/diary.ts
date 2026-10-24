@@ -29,8 +29,8 @@ export function addStep(walk: Walk, from: LatLon | null, to: LatLon): Walk {
 }
 
 export function addPlace(walk: Walk, place: DiaryPlace): Walk {
-  if (walk.places.some((p) => p.id === place.id)) return walk;
-  return { ...walk, places: [...walk.places, place] };
+  if (!walk.places.some((p) => p.id === place.id)) return { ...walk, places: [...walk.places, place] };
+  return { ...walk, places: walk.places.map((p) => (p.id === place.id ? { ...p, narration: place.narration } : p)) };
 }
 
 function formatKm(m: number): string {
@@ -44,7 +44,7 @@ function firstSentence(text: string): string {
 /** Plain-text summary for the share sheet. */
 export function walkSummary(walk: Walk): string {
   const minutes = walk.endedAt ? Math.round((walk.endedAt - walk.startedAt) / 60_000) : null;
-  const header = `🚶 My TourGuide walk: ${walk.places.length} places · ${formatKm(walk.distanceM)}${minutes !== null ? ` · ${minutes} min` : ''}`;
+  const header = `🚶 My TourGuide walk: ${walk.places.length} ${walk.places.length === 1 ? 'place' : 'places'} · ${formatKm(walk.distanceM)}${minutes !== null ? ` · ${minutes} min` : ''}`;
   const lines = walk.places.map((p, i) => `${i + 1}. ${p.title}: ${firstSentence(p.narration)}\n   ${p.url}`);
   return [header, ...lines].join('\n');
 }

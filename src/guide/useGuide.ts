@@ -1,15 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { createArticleLoader } from '../content/articleFetcher';
-import { createEntityDescriber } from '../content/wikidata';
-import { createBusinessLookup } from '../content/wikidataTypes';
 import { errorText, log } from '../diagnostics/log';
 import { captureUncaughtErrors, shareDiagnostics } from '../diagnostics/share';
-import { createMlKitTranslator } from '../translate/translator';
 import type { LanguageCode } from '../i18n/languages';
 import { lookupCountry, startLocationWatch } from '../location/locationService';
 import { startSimulatedWalk } from '../location/simulatedWalk';
-import { createAiProvider } from '../narration/aiProvider';
 import { LlmEngine } from '../narration/llmEngine';
 import { ExtractiveEngine } from '../narration/extractiveEngine';
 import { FallbackEngine, type FallbackReporter } from '../narration/fallbackEngine';
@@ -24,22 +19,26 @@ import { createMemoryToldStore } from '../storage/memoryToldStore';
 import { openToldStore, type ToldStore } from '../storage/toldStore';
 import { expoSpeaker } from '../voice/speaker';
 import { GuideController, INITIAL_SNAPSHOT, type GuideSnapshot } from './guideController';
+import {
+  AI_NARRATION_ENABLED,
+  AI_PROVIDER_LABEL,
+  aiProvider,
+  describePlace,
+  loadArticle,
+  lookupBusinesses,
+  OFFLINE_TRANSLATION_AVAILABLE,
+  translator,
+} from './services';
 
 const REEVALUATE_MS = 5_000;
 
-const aiProvider = createAiProvider();
-export const AI_NARRATION_ENABLED = aiProvider !== null;
-export const AI_PROVIDER_LABEL = aiProvider?.label ?? null;
-const translator = createMlKitTranslator();
-const lookupBusinesses = createBusinessLookup();
-export const OFFLINE_TRANSLATION_AVAILABLE = translator !== null;
+export { AI_NARRATION_ENABLED, AI_PROVIDER_LABEL, OFFLINE_TRANSLATION_AVAILABLE } from './services';
 
 function createEngine(report: FallbackReporter, onTranslationFailed: (reason: string) => void): NarrationEngine {
-  const loadText = createArticleLoader();
   const offline = new ExtractiveEngine({
-    loadText,
+    loadText: loadArticle,
     translator,
-    describe: createEntityDescriber(),
+    describe: describePlace,
     onTranslationFailed: (reason) => {
       log('error', `Offline translation failed: ${reason}`);
       onTranslationFailed(reason);
@@ -48,7 +47,7 @@ function createEngine(report: FallbackReporter, onTranslationFailed: (reason: st
   if (!aiProvider) {
     return offline;
   }
-  return new FallbackEngine(new LlmEngine(aiProvider.complete, loadText), offline, report);
+  return new FallbackEngine(new LlmEngine(aiProvider.complete, loadArticle), offline, report);
 }
 
 function fallbackNotice(error: unknown | null): string | null {

@@ -1,18 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { discoveryLine } from './src/guide/discovery';
 import type { GuideSnapshot } from './src/guide/guideController';
 import { AI_PROVIDER_LABEL, OFFLINE_TRANSLATION_AVAILABLE, useGuide } from './src/guide/useGuide';
 import { LANGUAGES, type LanguageCode } from './src/i18n/languages';
+import { useQuiz } from './src/quiz/useQuiz';
+import { placeCardText } from './src/share/placeCard';
 import { LanguagePicker } from './src/ui/LanguagePicker';
 import { NearbyList } from './src/ui/NearbyList';
 import { NowPlayingCard } from './src/ui/NowPlayingCard';
+import { QuizCard } from './src/ui/QuizCard';
 import { RouteCard } from './src/ui/RouteCard';
 import { SettingsPanel } from './src/ui/SettingsPanel';
 import { colors } from './src/ui/theme';
+import { useWalkDiary } from './src/walk/useWalkDiary';
 
 function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
   if (gpsAccuracyM === null) {
@@ -26,15 +30,24 @@ function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
 
 function GuideHeader({ guide, lang }: { guide: ReturnType<typeof useGuide>; lang: LanguageCode }) {
   const [showSettings, setShowSettings] = useState(false);
+  const quiz = useQuiz(() => guide.settings.aiEnabled);
+  const diary = useWalkDiary(guide.snapshot, guide.walking);
+  const { current, narration } = guide.snapshot;
   return (
     <View>
       <NowPlayingCard
-        poi={guide.snapshot.current}
-        narration={guide.snapshot.narration}
+        poi={current}
+        narration={narration}
         status={guide.snapshot.status}
         onSkip={guide.skip}
         onMore={guide.tellMore}
+        onQuiz={() => current && void quiz.makeQuiz(current, lang)}
+        onShare={() => current && Share.share({ message: placeCardText(current, narration) }).catch(() => undefined)}
       />
+      {quiz.quizMessage && <Text style={styles.notice}>{quiz.quizMessage}</Text>}
+      {quiz.quiz && quiz.quiz.poiId === current?.id && (
+        <QuizCard state={quiz.quiz} score={quiz.score} onAnswer={quiz.answer} onClose={quiz.closeQuiz} />
+      )}
       {guide.error && <Text style={styles.error}>{guide.error}</Text>}
       {guide.aiNotice && <Text style={styles.notice}>{guide.aiNotice}</Text>}
       {guide.translationNotice && <Text style={styles.error}>{guide.translationNotice}</Text>}
@@ -59,6 +72,11 @@ function GuideHeader({ guide, lang }: { guide: ReturnType<typeof useGuide>; lang
       <Text style={styles.notice}>
         {discoveryLine(guide.snapshot.discoveredTotal, guide.snapshot.discoveredIds.length, guide.snapshot.nearby.length)}
       </Text>
+      {diary.walks.length > 0 && !guide.walking && (
+        <Pressable accessibilityRole="button" onPress={diary.shareLastWalk} style={styles.simulate}>
+          <Text style={styles.secondaryText}>📔 Share last walk ({diary.walks[0].places.length} {diary.walks[0].places.length === 1 ? 'place' : 'places'})</Text>
+        </Pressable>
+      )}
       <Pressable accessibilityRole="button" onPress={() => setShowSettings((s) => !s)} style={styles.simulate}>
         <Text style={styles.secondaryText}>⚙ Settings {showSettings ? '▲' : '▼'}</Text>
       </Pressable>

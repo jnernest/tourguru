@@ -77,6 +77,17 @@ async function main() {
     console.log('✔ "Walk there" button shown');
     console.log(`✔ story: ${(await narration.textContent()).slice(0, 160)}…`);
 
+    await page.getByText('🎯 Quiz', { exact: true }).click();
+    const quizOutcome = page.getByText(/Score: \d+ of \d+|No quiz question/);
+    await quizOutcome.first().waitFor({ timeout: NARRATION_TIMEOUT_MS });
+    if (await page.getByText('No quiz question', { exact: false }).isVisible()) {
+      console.log('✔ quiz: no question for this place (no build year on Wikidata)');
+    } else {
+      await page.locator('[role="button"]', { hasText: /^\d{4}$/ }).first().click();
+      await page.getByText(/Score: \d+ of 1/).waitFor({ timeout: 5_000 });
+      console.log(`✔ quiz answered: ${(await page.getByText(/Score: /).textContent()).trim()}`);
+    }
+
     await page.getByText('Suggest a walk', { exact: false }).click();
     await page.getByText(/Your walk · \d+ stops/).waitFor({ timeout: 10_000 });
     console.log(`✔ walk planned: ${(await page.getByText(/Your walk · \d+ stops/).textContent()).trim()}`);
@@ -93,6 +104,10 @@ async function main() {
       throw new Error(`settings not saved: ${JSON.stringify(saved)}`);
     }
     console.log(`✔ settings saved: ${JSON.stringify({ tone: saved.tone, interests: saved.interests, speechRate: saved.speechRate })}`);
+    await page.getByText('Stop walk', { exact: true }).click();
+    await page.getByText(/Share last walk \(\d+ places?\)/).waitFor({ timeout: 5_000 });
+    const walks = await page.evaluate(() => JSON.parse(localStorage.getItem('tourguide.walks') ?? '[]'));
+    console.log(`✔ diary saved: ${walks[0].places.length} places, ${Math.round(walks[0].distanceM)} m`);
     await page.screenshot({ path: SCREENSHOT, fullPage: true });
     console.log(`✔ screenshot: ${SCREENSHOT}`);
     if (pageErrors.length) throw new Error(`page error during walk: ${pageErrors[0]}`);

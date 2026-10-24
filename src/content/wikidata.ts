@@ -6,6 +6,7 @@ export interface EntityText {
   label: string | null;
   description: string | null;
   facts: string[];
+  builtYear?: number | null;
 }
 
 type FactSource = 'entity' | 'year' | 'metres';
@@ -54,6 +55,12 @@ interface EntitiesResponse {
 interface RawFact {
   kind: FactKind;
   values: ({ entityId: string } | { text: string })[];
+}
+
+function builtYearOf(raw: RawFact[]): number | null {
+  const fact = raw.find((f) => f.kind === 'built') ?? raw.find((f) => f.kind === 'opened');
+  const value = fact?.values[0];
+  return value && 'text' in value ? Number(value.text) : null;
 }
 
 export function buildEntityUrl(ids: string[], lang: string, props: string): string {
@@ -130,6 +137,7 @@ export function createEntityDescriber(fetchFn: FetchLike = fetch) {
         label: pickLabel(entity, lang),
         description: entity?.descriptions?.[lang]?.value ?? null,
         facts: formatFacts(raw, labels, lang),
+        builtYear: builtYearOf(raw),
       };
       return text.description || text.facts.length > 0 ? text : null;
     } catch {

@@ -13,13 +13,15 @@ interface Props {
   status: GuideStatus;
   onSkip: () => void;
   onMore: () => void;
+  onQuiz: () => void;
+  onShare: () => void;
 }
 
 const MIN_ASPECT = 4 / 3;
 const MAX_ASPECT = 16 / 9;
 const COLLAPSED_LINES = 2;
 
-export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props) {
+export function NowPlayingCard({ poi, narration, status, onSkip, onMore, onQuiz, onShare }: Props) {
   const [expanded, setExpanded] = useState(false);
   if (!poi) {
     return (
@@ -59,6 +61,12 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props
             style={styles.skip}
           >
             <Text style={styles.skipText}>🧭 Walk there</Text>
+          </Pressable>
+          <Pressable accessibilityRole="button" onPress={onQuiz} style={styles.skip}>
+            <Text style={styles.skipText}>🎯 Quiz</Text>
+          </Pressable>
+          <Pressable accessibilityRole="button" onPress={onShare} style={styles.skip}>
+            <Text style={styles.skipText}>📤 Share</Text>
           </Pressable>
           {narrating && (
             <Pressable accessibilityRole="button" onPress={onSkip} style={styles.skip}>

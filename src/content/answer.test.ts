@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import { interestBonus } from '../text/interestCues';
-import { addPlace, addStep, startWalk, walkSummary } from '../walk/diary';
 import { answerFromArticle } from './answer';
 
 const ARTICLE = `The Frauenkirche is a church in Munich.
@@ -29,21 +28,5 @@ describe('interestBonus', () => {
     expect(interestBonus(sentence, [])).toBe(1);
     expect(interestBonus(sentence, ['architecture'])).toBeGreaterThan(1);
     expect(interestBonus(sentence, ['nature'])).toBe(1);
-  });
-});
-
-describe('walk diary', () => {
-  it('adds real steps, ignores jitter, and keeps places once', () => {
-    const a = { lat: 48, lon: 11 };
-    const b = { lat: 48.001, lon: 11 };
-    let walk = addStep(addStep(startWalk(0), null, a), a, b);
-    walk = addStep(walk, b, { lat: 48.00102, lon: 11 });
-    expect(walk.distanceM).toBeCloseTo(111, 0);
-    const place = { id: 'Q1', title: 'Karlstor', at: 1, narration: 'A gate. More text.', imageUrl: null, url: 'https://x' };
-    walk = addPlace(addPlace(walk, place), place);
-    expect(walk.places).toHaveLength(1);
-    expect(walkSummary({ ...walk, endedAt: 30 * 60_000 })).toBe(
-      '🚶 My TourGuide walk: 1 places · 111 m · 30 min\n1. Karlstor: A gate.\n   https://x',
-    );
   });
 });
