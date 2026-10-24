@@ -13,7 +13,7 @@ export const MAX_SOURCE_CHARS = 4_000;
 export const MAX_STORY_SOURCE_CHARS = 9_000;
 const MAX_QUESTION_CHARS = 300;
 
-const SYSTEM_PROMPT = `You are a friendly, knowledgeable walking-tour guide talking to someone near a place right now. Your words are read aloud by text-to-speech.
+export const SYSTEM_PROMPT = `You are a friendly, knowledgeable walking-tour guide talking to someone near a place right now. Your words are read aloud by text-to-speech.
 
 Rules for every answer:
 - Use only facts stated in the text inside <source>. Do not add facts, dates, names or numbers from memory. If the source says little, say less.

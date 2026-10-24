@@ -36,8 +36,16 @@ Android APK (Expo EAS cloud build, Android only for on-device translation):
 
 ```bash
 npm run eas:login
-npm run apk:set-llm-key                  # optional: copies the Gemini key from .env.local to EAS (compiled into the APK!)
 npm run apk                              # prints a download link / QR code
+```
+
+AI stories come from a small server on EAS Hosting (`src/app/api/narrate+api.ts`), so the Gemini
+key never ships in the app:
+
+```bash
+npm run proxy:set-key       # uploads LLM_API_KEY from .env.local to EAS (sensitive, server-only)
+npm run proxy:deploy        # exports the server build, checks it has no key, deploys to tour-guide.expo.app
+npm run apk:set-proxy-url   # tells app builds/updates to use EXPO_PUBLIC_LLM_PROXY_URL
 ```
 
 After that, ship app-code changes over the air (no new APK; the app picks them up on its

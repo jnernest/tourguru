@@ -1,7 +1,8 @@
-import { ANTHROPIC_API_KEY, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL } from '../config';
+import { ANTHROPIC_API_KEY, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, LLM_PROXY_URL } from '../config';
 import { CLAUDE_MODEL, createClaudeComplete } from './claudeClient';
 import type { CompleteFn } from './llmEngine';
 import { createChatComplete, providerName } from './openAiCompatibleClient';
+import { createProxyComplete } from './proxyClient';
 
 export interface AiProvider {
   label: string;
@@ -9,6 +10,9 @@ export interface AiProvider {
 }
 
 export function createAiProvider(): AiProvider | null {
+  if (LLM_PROXY_URL) {
+    return { label: 'Gemini via TourGuide server', complete: createProxyComplete(LLM_PROXY_URL) };
+  }
   if (LLM_API_KEY) {
     const name = providerName(LLM_BASE_URL);
     return {

@@ -55,8 +55,9 @@
     "store:build": "npx --yes eas-cli@25.1.1 build --platform android --profile production",
     "store:submit": "npx --yes eas-cli@25.1.1 submit --platform android --profile production --latest",
     "apk:list": "npx --yes eas-cli@25.1.1 build:list --platform android --limit 5",
-    "apk:set-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_ANTHROPIC_API_KEY",
-    "apk:set-llm-key": "node scripts/set-eas-env.cjs EXPO_PUBLIC_LLM_API_KEY"
+    "proxy:set-key": "node scripts/set-eas-env.cjs LLM_API_KEY",
+    "proxy:deploy": "node scripts/deploy-proxy.cjs",
+    "apk:set-proxy-url": "node scripts/set-eas-env.cjs EXPO_PUBLIC_LLM_PROXY_URL"
   },
   "private": true
 }

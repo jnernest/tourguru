@@ -3,7 +3,15 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const NAME = process.argv[2];
-const ALLOWED_NAMES = new Set(['EXPO_PUBLIC_LLM_API_KEY', 'EXPO_PUBLIC_ANTHROPIC_API_KEY', 'EXPO_PUBLIC_LLM_BASE_URL', 'EXPO_PUBLIC_LLM_MODEL']);
+const ALLOWED_NAMES = new Set([
+  'LLM_API_KEY',
+  'EXPO_PUBLIC_LLM_PROXY_URL',
+  'EXPO_PUBLIC_LLM_API_KEY',
+  'EXPO_PUBLIC_ANTHROPIC_API_KEY',
+  'EXPO_PUBLIC_LLM_BASE_URL',
+  'EXPO_PUBLIC_LLM_MODEL',
+]);
+const FALLBACK_NAMES = { LLM_API_KEY: 'EXPO_PUBLIC_LLM_API_KEY' };
 const SAFE_VALUE = /^[A-Za-z0-9._:/\-]+$/;
 const EAS_CLI = 'eas-cli@25.1.1';
 
@@ -16,11 +24,9 @@ if (!ALLOWED_NAMES.has(NAME)) fail(`Unknown variable "${NAME}". Expected one of:
 
 const envFile = path.resolve('.env.local');
 if (!fs.existsSync(envFile)) fail('.env.local not found. Copy .env.local.example to .env.local and add the key.');
-const line = fs
-  .readFileSync(envFile, 'utf8')
-  .split(/\r?\n/)
-  .find((l) => l.startsWith(`${NAME}=`));
-const value = line?.slice(NAME.length + 1).trim();
+const lines = fs.readFileSync(envFile, 'utf8').split(/\r?\n/);
+const valueOf = (name) => lines.find((l) => l.startsWith(`${name}=`))?.slice(name.length + 1).trim();
+const value = valueOf(NAME) || (FALLBACK_NAMES[NAME] && valueOf(FALLBACK_NAMES[NAME]));
 if (!value) fail(`${NAME} is empty in .env.local.`);
 if (!SAFE_VALUE.test(value)) fail(`${NAME} contains unexpected characters; set it on expo.dev instead.`);
 
