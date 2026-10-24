@@ -6,11 +6,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { discoveryLine } from './src/guide/discovery';
 import type { GuideSnapshot } from './src/guide/guideController';
 import { AI_PROVIDER_LABEL, OFFLINE_TRANSLATION_AVAILABLE, useGuide } from './src/guide/useGuide';
-import type { LanguageCode } from './src/i18n/languages';
+import { LANGUAGES, type LanguageCode } from './src/i18n/languages';
 import { LanguagePicker } from './src/ui/LanguagePicker';
 import { NearbyList } from './src/ui/NearbyList';
 import { NowPlayingCard } from './src/ui/NowPlayingCard';
 import { RouteCard } from './src/ui/RouteCard';
+import { SettingsPanel } from './src/ui/SettingsPanel';
 import { colors } from './src/ui/theme';
 
 function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
@@ -23,7 +24,8 @@ function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
     : `GPS: ${accuracy}`;
 }
 
-function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
+function GuideHeader({ guide, lang }: { guide: ReturnType<typeof useGuide>; lang: LanguageCode }) {
+  const [showSettings, setShowSettings] = useState(false);
   return (
     <View>
       <NowPlayingCard
@@ -57,6 +59,17 @@ function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
       <Text style={styles.notice}>
         {discoveryLine(guide.snapshot.discoveredTotal, guide.snapshot.discoveredIds.length, guide.snapshot.nearby.length)}
       </Text>
+      <Pressable accessibilityRole="button" onPress={() => setShowSettings((s) => !s)} style={styles.simulate}>
+        <Text style={styles.secondaryText}>⚙ Settings {showSettings ? '▲' : '▼'}</Text>
+      </Pressable>
+      {showSettings && (
+        <SettingsPanel
+          settings={guide.settings}
+          onChange={guide.updateSettings}
+          ttsLocale={LANGUAGES[lang].ttsLocale}
+          aiAvailable={AI_PROVIDER_LABEL !== null}
+        />
+      )}
     </View>
   );
 }
@@ -96,7 +109,7 @@ function GuideScreen() {
         lang={lang}
         onSelect={guide.tellAbout}
         discoveredIds={guide.snapshot.discoveredIds}
-        header={<GuideHeader guide={guide} />}
+        header={<GuideHeader guide={guide} lang={lang} />}
       />
       <Text style={styles.shareLog} onPress={guide.shareLog} accessibilityRole="button">
         Share diagnostic log

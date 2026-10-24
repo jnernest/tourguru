@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { splitSentences } from '../text/sentences';
-import { MAX_SENTENCES, summarize, TARGET_CHARS } from './summarizer';
+import { highlight, MAX_SENTENCES, summarize, TARGET_CHARS } from './summarizer';
 
 const ARTICLE = [
   'Schönbrunn Palace was the main summer residence of the Habsburg rulers in Vienna.',
@@ -58,6 +58,15 @@ describe('summarize', () => {
 
   it('keeps short leads intact instead of reporting "no information"', () => {
     expect(summarize('A tower. It is old.', 'Old Tower')).toBe('A tower. It is old.');
+  });
+
+  it('picks the highlight that matches the listener interests', () => {
+    const text = [
+      'The Frauenkirche is a church in Munich.',
+      'Its two towers were designed by the architect Jörg von Halsbach in late Gothic style.',
+      'The church square hosts a large market with many stalls every year in winter.',
+    ].join(' ');
+    expect(highlight(text, 'Frauenkirche', ['architecture'])).toMatch(/architect/);
   });
 
   it('returns empty text when there is no usable prose', () => {

@@ -12,6 +12,9 @@ export class FallbackEngine implements NarrationEngine {
   ) {}
 
   async narrate(poi: Poi, lang: LanguageCode, context?: NarrationContext): Promise<string> {
+    if (context?.offlineOnly) {
+      return this.fallback.narrate(poi, lang, context);
+    }
     try {
       const text = await this.primary.narrate(poi, lang, context);
       this.report(null);

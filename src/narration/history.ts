@@ -1,5 +1,7 @@
 import { historyText, parseSections } from '../content/sections';
 import { contentWords, proseOnly, splitSentences, stripParentheticals } from '../text/sentences';
+import type { Interest } from '../settings/settings';
+import { interestBonus } from '../text/interestCues';
 import { isFunFact, standsAlone, storyBonus } from '../text/storyCues';
 import { wordFrequencies } from './summarizer';
 
@@ -29,7 +31,12 @@ function proseSentences(text: string, maxChars = MAX_SENTENCE_CHARS): string[] {
 
 const century = (year: number) => Math.floor(year / 100);
 
-export function historyTimeline(article: string, title: string): string[] {
+export function historyTimeline(
+  article: string,
+  title: string,
+  interests: readonly Interest[] = [],
+  maxSentences = MAX_TIMELINE_SENTENCES,
+): string[] {
   const history = historyText(parseSections(article));
   const dated = proseSentences(history || article)
     .map((s, i) => ({ s, i, year: sentenceYear(s) }))
@@ -39,7 +46,7 @@ export function historyTimeline(article: string, title: string): string[] {
   const score = (s: string) => {
     const words = [...new Set(contentWords(s))];
     const centrality = words.reduce((sum, w) => sum + (freq.get(w) ?? 0), 0) / Math.sqrt(words.length || 1);
-    return centrality * storyBonus(s) * (words.some((w) => titleWords.has(w)) ? 1.2 : 1);
+    return centrality * storyBonus(s) * interestBonus(s, interests) * (words.some((w) => titleWords.has(w)) ? 1.2 : 1);
   };
 
   // Earliest event first, then the best ones, at most two per century to span the whole history.
@@ -49,7 +56,7 @@ export function historyTimeline(article: string, title: string): string[] {
   const perCentury = new Map<number, number>();
   let chars = 0;
   for (const c of earliest ? [earliest, ...ranked.filter((r) => r !== earliest)] : []) {
-    if (chosen.length >= MAX_TIMELINE_SENTENCES) break;
+    if (chosen.length >= maxSentences) break;
     const inCentury = perCentury.get(century(c.year)) ?? 0;
     if (inCentury >= MAX_PER_CENTURY || chars + c.s.length > MAX_STORY_CHARS) continue;
     chosen.push(c);

@@ -46,6 +46,17 @@ describe('FallbackEngine', () => {
     expect(report).toHaveBeenCalledWith(offline);
   });
 
+  it('goes straight to the offline engine when AI is switched off', async () => {
+    const complete = vi.fn<CompleteFn>(async () => 'AI text');
+    const text = await new FallbackEngine(new LlmEngine(complete), new ExtractiveEngine()).narrate(poi, 'en', {
+      distanceM: null,
+      direction: null,
+      offlineOnly: true,
+    });
+    expect(complete).not.toHaveBeenCalled();
+    expect(text).toContain('A tower. It is old.');
+  });
+
   it('passes where the place is on to the primary engine', async () => {
     const complete = vi.fn<CompleteFn>(async () => 'AI text');
     await new FallbackEngine(new LlmEngine(complete), new ExtractiveEngine()).narrate(poi, 'en', {

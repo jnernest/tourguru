@@ -18,6 +18,8 @@ import { createLocalLanguageResolver } from '../pois/localLanguage';
 import { createMultiLanguageSource } from '../pois/multiLanguageSource';
 import { createWikipediaSource } from '../pois/wikipediaSource';
 import { planRoute, type RoutePlan } from '../route/planner';
+import type { Settings } from '../settings/settings';
+import { loadSettings, saveSettings } from '../settings/settingsStore';
 import { createMemoryToldStore } from '../storage/memoryToldStore';
 import { openToldStore, type ToldStore } from '../storage/toldStore';
 import { expoSpeaker } from '../voice/speaker';
@@ -76,6 +78,8 @@ export function useGuide(lang: LanguageCode) {
   const [aiNotice, setAiNotice] = useState<string | null>(null);
   const [translationNotice, setTranslationNotice] = useState<string | null>(null);
   const [route, setRoute] = useState<RoutePlan | null>(null);
+  const [settings, setSettings] = useState<Settings>(loadSettings);
+  const settingsRef = useRef(settings);
   const controllerRef = useRef<GuideController | null>(null);
   const toldRef = useRef<ToldStore | null>(null);
   const stopWatchRef = useRef<(() => void) | null>(null);
@@ -101,6 +105,7 @@ export function useGuide(lang: LanguageCode) {
           told,
           canTranslate: AI_NARRATION_ENABLED || OFFLINE_TRANSLATION_AVAILABLE,
           autoDepth: AI_NARRATION_ENABLED ? 'story' : 'brief',
+          settings: () => settingsRef.current,
           now: Date.now,
           onChange: setSnapshot,
         },
@@ -195,6 +200,12 @@ export function useGuide(lang: LanguageCode) {
     setRoute(plan);
   }, []);
   const endWalk = useCallback(() => setRoute(null), []);
+  const updateSettings = useCallback((patch: Partial<Settings>) => {
+    const next = { ...settingsRef.current, ...patch };
+    settingsRef.current = next;
+    setSettings(next);
+    saveSettings(next);
+  }, []);
   const shareLog = useCallback(() => {
     shareDiagnostics({
       lang,
@@ -212,6 +223,8 @@ export function useGuide(lang: LanguageCode) {
     translationNotice,
     shareLog,
     route,
+    settings,
+    updateSettings,
     planWalk,
     endWalk,
     isTold,

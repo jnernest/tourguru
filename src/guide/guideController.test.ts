@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Fix } from '../location/fix';
 import { ExtractiveEngine } from '../narration/extractiveEngine';
 import type { Poi, PoiSource } from '../pois/types';
+import { DEFAULT_SETTINGS } from '../settings/settings';
 import { createMemoryToldStore } from '../storage/memoryToldStore';
 import { ORIGIN, poiNorth } from '../testing/poiFactory';
 import type { Speaker } from '../voice/speaker';
@@ -202,6 +203,24 @@ describe('GuideController', () => {
       await t.settleAt(0);
       expect(narrate.mock.calls[0][2]?.depth).toBe(expected);
     }
+  });
+
+  it('stays quiet when auto-talk is off, but still tells a tapped place', async () => {
+    const t = setup([poiNorth('a', 10)]);
+    t.deps.settings = () => ({ ...DEFAULT_SETTINGS, autoTalk: false });
+    await t.settleAt(0);
+    expect(t.spoken).toHaveLength(0);
+    await t.controller.tellAbout('a');
+    expect(t.spoken).toHaveLength(1);
+  });
+
+  it('passes interests, tone, AI choice and speech settings through', async () => {
+    const t = setup([poiNorth('a', 10)]);
+    t.deps.settings = () => ({ ...DEFAULT_SETTINGS, interests: ['art'], tone: 'kids', aiEnabled: false, speechRate: 1.3 });
+    const narrate = vi.spyOn(t.deps.engine, 'narrate');
+    await t.settleAt(0);
+    expect(narrate.mock.calls[0][2]).toMatchObject({ interests: ['art'], tone: 'kids', offlineOnly: true });
+    expect(vi.mocked(t.deps.speaker.speak).mock.calls[0][2]).toEqual({ rate: 1.3, voiceId: null });
   });
 
   it('skip stops the speaker', async () => {

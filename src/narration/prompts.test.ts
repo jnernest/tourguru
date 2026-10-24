@@ -34,6 +34,13 @@ describe('buildNarrationPrompt', () => {
     expect(story.system).toMatch(/Fun fact:/);
   });
 
+  it('names the interests and tone, defaulting to general/standard', () => {
+    expect(buildNarrationPrompt(poi, 'en').user).toMatch(/Interests: general\nTone: standard/);
+    const kids = buildNarrationPrompt(poi, 'en', { distanceM: null, direction: null, interests: ['art', 'war'], tone: 'kids' });
+    expect(kids.user).toMatch(/Interests: art, war\nTone: kids/);
+    expect(kids.system).toMatch(/"kids": simple words/);
+  });
+
   it('keeps the system prompt identical across places and languages', () => {
     const other = poiNorth('2', 0, { title: 'Isartor', summary: 'A gate.' });
     expect(buildNarrationPrompt(poi, 'en').system).toBe(buildNarrationPrompt(other, 'hi').system);

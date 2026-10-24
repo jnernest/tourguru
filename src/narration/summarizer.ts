@@ -1,4 +1,6 @@
 import { contentWords, proseOnly, splitSentences, stripParentheticals } from '../text/sentences';
+import type { Interest } from '../settings/settings';
+import { interestBonus } from '../text/interestCues';
 import { storyBonus } from '../text/storyCues';
 
 export const TARGET_CHARS = 450;
@@ -26,30 +28,30 @@ function scoreSentence(sentence: string, index: number, freq: Map<string, number
   return centrality * mentionsPlace * position * substance * storyBonus(sentence);
 }
 
-function rankSentences(text: string, title: string): { sentences: string[]; ranked: { i: number }[] } {
+function rankSentences(text: string, title: string, interests: readonly Interest[]): { sentences: string[]; ranked: { i: number }[] } {
   const sentences = splitSentences(stripParentheticals(proseOnly(text.slice(0, MAX_INPUT_CHARS))))
     .map((s) => s.trim())
     .filter((s, i) => (i === 0 ? s.length > 0 : s.length >= MIN_SENTENCE_CHARS && s.length <= MAX_SENTENCE_CHARS));
   const freq = wordFrequencies(sentences);
   const titleWords = new Set(contentWords(title));
   const ranked = sentences
-    .map((s, i) => ({ i, score: i === 0 ? Number.POSITIVE_INFINITY : scoreSentence(s, i, freq, titleWords) }))
+    .map((s, i) => ({ i, score: i === 0 ? Number.POSITIVE_INFINITY : scoreSentence(s, i, freq, titleWords) * interestBonus(s, interests) }))
     .sort((a, b) => b.score - a.score);
   return { sentences, ranked };
 }
 
 const MAX_HIGHLIGHT_CHARS = 220;
 
-export function highlight(text: string, title: string): string {
-  const { sentences, ranked } = rankSentences(text, title);
+export function highlight(text: string, title: string, interests: readonly Interest[] = []): string {
+  const { sentences, ranked } = rankSentences(text, title, interests);
   const best = ranked.find(
     ({ i }) => i > 0 && sentences[i].length >= FULL_WEIGHT_CHARS && sentences[i].length <= MAX_HIGHLIGHT_CHARS,
   );
   return best ? sentences[best.i] : '';
 }
 
-export function summarize(text: string, title: string): string {
-  const { sentences, ranked } = rankSentences(text, title);
+export function summarize(text: string, title: string, interests: readonly Interest[] = []): string {
+  const { sentences, ranked } = rankSentences(text, title, interests);
   if (sentences.length === 0) {
     return '';
   }

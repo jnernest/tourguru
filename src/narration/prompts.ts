@@ -32,7 +32,11 @@ Mode "story" (the full story, told as the listener reaches the place or when the
 - If a position is given, first point the place out in one short sentence the same way as in brief mode (never "Nearby").
 - Then tell the history of the place as a story, in chronological order: how it began, who built or changed it and why, the turning points, and what it is today. Use the dates the source gives.
 - Then one sentence that starts with "Fun fact:" (in the requested language) with the most surprising legend, anecdote, record or curiosity in the source. Leave it out if the source has none.
-- 140 to 220 words.`;
+- 140 to 220 words.
+
+The request also names the listener's interests and a tone.
+- Interests: when the source has material on them, prefer it; never invent it.
+- Tone "standard": warm and clear. "kids": simple words, short sentences, playful, half the word count, end with a question the child can look for. "expert": more detail, names, styles and technical terms. "fun": light-hearted and witty, still factual.`;
 
 const SIDE: Record<Direction, string> = {
   ahead: 'ahead of the listener',
@@ -63,6 +67,8 @@ export function buildNarrationPrompt(poi: Poi, lang: LanguageCode, context: Narr
       `Language: ${LANGUAGES[lang].englishName}`,
       `Place: ${poi.title}`,
       `Position: ${describePosition(context)}`,
+      `Interests: ${context.interests?.length ? context.interests.join(', ') : 'general'}`,
+      `Tone: ${context.tone ?? 'standard'}`,
       `Source language code: ${poi.lang}`,
       '',
       `<source>\n${sourceFor(poi.summary, story)}\n</source>`,

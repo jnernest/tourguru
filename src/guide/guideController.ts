@@ -12,6 +12,7 @@ import { rankPois, type RankedPoi } from '../pois/poiRanker';
 import type { Poi, PoiSource } from '../pois/types';
 import type { ToldStore } from '../storage/toldStore';
 import type { Speaker } from '../voice/speaker';
+import { DEFAULT_SETTINGS, type Settings } from '../settings/settings';
 import { badgeEarned } from './discovery';
 import { selectCandidate, StabilityGate } from './trigger';
 
@@ -58,6 +59,7 @@ export interface GuideDeps {
   told: ToldStore;
   canTranslate: boolean;
   autoDepth?: NarrationDepth;
+  settings?: () => Settings;
   now: () => number;
   onChange: (snapshot: GuideSnapshot) => void;
 }
@@ -79,6 +81,10 @@ export class GuideController {
 
   private get autoDepth(): NarrationDepth {
     return this.deps.autoDepth ?? 'brief';
+  }
+
+  private get settings(): Settings {
+    return this.deps.settings?.() ?? DEFAULT_SETTINGS;
   }
 
   get state(): GuideSnapshot {
@@ -104,7 +110,7 @@ export class GuideController {
       const standingStill = fix.heading === null;
       const speakable = this.deps.canTranslate ? ranked : ranked.filter((r) => r.poi.lang === this.lang);
       const candidate = selectCandidate(speakable, (id) => this.deps.told.has(id), standingStill);
-      if (this.gate.accept(candidate?.poi.id ?? null) && candidate && this.canNarrate()) {
+      if (this.gate.accept(candidate?.poi.id ?? null) && candidate && this.settings.autoTalk && this.canNarrate()) {
         this.narration = this.narrate(candidate.poi, this.autoDepth);
       }
     } finally {
@@ -205,13 +211,15 @@ export class GuideController {
   }
 
   private contextFor(poi: Poi, depth: NarrationDepth): NarrationContext {
+    const { interests, tone, aiEnabled } = this.settings;
     const fix = this.lastFix;
-    if (!fix) return { ...NO_CONTEXT, depth };
-    return {
-      depth,
-      distanceM: distanceMeters(fix, poi),
-      direction: fix.heading === null ? null : relativeDirection(bearingDegrees(fix, poi), fix.heading),
-    };
+    const position = fix
+      ? {
+          distanceM: distanceMeters(fix, poi),
+          direction: fix.heading === null ? null : relativeDirection(bearingDegrees(fix, poi), fix.heading),
+        }
+      : NO_CONTEXT;
+    return { ...position, depth, interests, tone, offlineOnly: !aiEnabled };
   }
 
   private async markDiscovered(poi: Poi): Promise<void> {
@@ -229,7 +237,8 @@ export class GuideController {
       await this.markDiscovered(poi);
       const text = await this.deps.engine.narrate(poi, this.lang, this.contextFor(poi, depth));
       this.update({ narration: text });
-      const outcome = await this.deps.speaker.speak(text, LANGUAGES[this.lang].ttsLocale);
+      const { speechRate, voiceId } = this.settings;
+      const outcome = await this.deps.speaker.speak(text, LANGUAGES[this.lang].ttsLocale, { rate: speechRate, voiceId });
       log(outcome === 'done' ? 'info' : 'warn', `Speech ${outcome} (${text.length} chars): ${text.slice(0, 120)}`);
     } catch (e) {
       log('error', `Narration failed for "${poi.title}": ${errorText(e)}`);

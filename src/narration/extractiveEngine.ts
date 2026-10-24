@@ -17,6 +17,8 @@ export interface ExtractiveEngineDeps {
 
 const MIN_FACTS_FOR_KEY_POINTS = 2;
 
+const KIDS_STORY_SENTENCES = 2;
+
 interface Request {
   poi: Poi;
   lang: LanguageCode;
@@ -38,7 +40,7 @@ export class ExtractiveEngine implements NarrationEngine {
     if (entity && entity.facts.length >= MIN_FACTS_FOR_KEY_POINTS) {
       return this.keyPoints(req, entity, text);
     }
-    const summary = summarize(text, poi.title);
+    const summary = summarize(text, poi.title, context.interests);
     if (summary.length === 0) {
       return entity ? this.keyPoints(req, entity, '') : phrase(lang, 'noInfo', poi.title);
     }
@@ -52,7 +54,7 @@ export class ExtractiveEngine implements NarrationEngine {
 
   private async keyPoints({ poi, lang, context }: Request, entity: EntityText, text: string): Promise<string> {
     const name = nameWithDescription(lang, entity.label ?? poi.title, entity.description);
-    const best = text ? highlight(text, poi.title) : '';
+    const best = text ? highlight(text, poi.title, context.interests) : '';
     const extra = await this.inUserLanguage(best, poi.lang, lang);
     const said = extra && isStoryLike(best) ? phrase(lang, 'funFact', extra) : extra;
     return [opening(lang, context, name, poi.id), ...entity.facts, said ?? ''].filter((part) => part.length > 0).join(' ');
@@ -64,7 +66,7 @@ export class ExtractiveEngine implements NarrationEngine {
       context.distanceM === null
         ? phrase(lang, 'storyIntro', name)
         : opening(lang, context, nameWithDescription(lang, name, entity?.description ?? null), poi.id);
-    const timeline = historyTimeline(text, poi.title);
+    const timeline = historyTimeline(text, poi.title, context.interests, context.tone === 'kids' ? KIDS_STORY_SENTENCES : undefined);
     const fact = funFact(text, timeline);
     if (timeline.length === 0 && !fact) {
       return phrase(lang, 'noHistory', name);

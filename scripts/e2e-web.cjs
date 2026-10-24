@@ -83,6 +83,16 @@ async function main() {
     console.log(`    ${(await page.getByText(/^Next: /).textContent()).trim()}`);
     await page.getByText('Open in Google Maps').waitFor({ timeout: 5_000 });
     console.log(`✔ discovery: ${(await page.getByText(/in total/).first().textContent()).trim()}`);
+    await page.getByText('⚙ Settings', { exact: false }).click();
+    await page.getByText('Kids', { exact: true }).click();
+    await page.getByText('History', { exact: true }).click();
+    await page.getByText('+', { exact: true }).click();
+    await page.getByText('Speaking speed: 1.1×').waitFor({ timeout: 5_000 });
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('tourguide.settings') ?? '{}'));
+    if (saved.tone !== 'kids' || !saved.interests?.includes('history') || saved.speechRate !== 1.1) {
+      throw new Error(`settings not saved: ${JSON.stringify(saved)}`);
+    }
+    console.log(`✔ settings saved: ${JSON.stringify({ tone: saved.tone, interests: saved.interests, speechRate: saved.speechRate })}`);
     await page.screenshot({ path: SCREENSHOT, fullPage: true });
     console.log(`✔ screenshot: ${SCREENSHOT}`);
     if (pageErrors.length) throw new Error(`page error during walk: ${pageErrors[0]}`);
