@@ -1,3 +1,4 @@
+import { answerFromArticle } from '../content/answer';
 import type { EntityText } from '../content/wikidata';
 import { errorText } from '../diagnostics/log';
 import { phrase, type LanguageCode } from '../i18n/languages';
@@ -50,6 +51,15 @@ export class ExtractiveEngine implements NarrationEngine {
     }
     // Never read e.g. German text with an English voice.
     return entity ? this.keyPoints(req, entity, '') : phrase(lang, 'otherLanguage', poi.title);
+  }
+
+  async answer(poi: Poi, lang: LanguageCode, question: string): Promise<string> {
+    const text = this.deps.loadText ? await this.deps.loadText(poi) : poi.summary;
+    // Match words in the article's language, then speak the answer in the user's.
+    const query = (await this.inUserLanguage(question, lang, poi.lang)) ?? question;
+    const found = answerFromArticle(query, text);
+    const said = found ? await this.inUserLanguage(found, poi.lang, lang) : null;
+    return said || phrase(lang, 'noAnswer', poi.title);
   }
 
   private async keyPoints({ poi, lang, context }: Request, entity: EntityText, text: string): Promise<string> {

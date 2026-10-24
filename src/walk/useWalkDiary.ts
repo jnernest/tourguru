@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Share } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 
 import type { GuideSnapshot } from '../guide/guideController';
 import { readJson, writeJson } from '../storage/kv';
-import { addPlace, addStep, startWalk, walkSummary, type Walk } from './diary';
+import { addPlace, addStep, startWalk, type Walk } from './diary';
 
 const WALKS_KEY = 'tourguide.walks';
 const MAX_WALKS = 30;
@@ -49,10 +48,5 @@ export function useWalkDiary(snapshot: GuideSnapshot, walking: boolean) {
     });
   }, [current, narration]);
 
-  const shareLastWalk = useCallback(() => {
-    const last = walks[0];
-    if (last) Share.share({ message: walkSummary(last) }).catch(() => undefined);
-  }, [walks]);
-
-  return { walks, shareLastWalk };
+  return { walks };
 }

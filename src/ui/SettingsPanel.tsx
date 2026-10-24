@@ -78,6 +78,11 @@ export function SettingsPanel({ settings, onChange, ttsLocale, aiAvailable }: Pr
     <View style={styles.panel}>
       <Row label="Talk automatically while walking" value={settings.autoTalk} onValueChange={(autoTalk) => onChange({ autoTalk })} />
       <Row
+        label="Keep guiding with the screen off (from the next walk)"
+        value={settings.backgroundGuiding}
+        onValueChange={(backgroundGuiding) => onChange({ backgroundGuiding })}
+      />
+      <Row
         label={aiAvailable ? 'AI narration' : 'AI narration (no key configured)'}
         value={aiAvailable && settings.aiEnabled}
         onValueChange={(aiEnabled) => onChange({ aiEnabled })}

@@ -41,7 +41,9 @@ async function errorFor(res: { status: number; json(): Promise<unknown> }): Prom
 }
 
 // Personal use only: the API key is compiled into the bundle; move behind a backend before sharing.
-export function createChatComplete(config: LlmConfig, fetchFn: typeof fetch = fetch): CompleteFn {
+export type ChatFetch = (url: string, init: RequestInit) => Promise<Response>;
+
+export function createChatComplete(config: LlmConfig, fetchFn: ChatFetch = fetch): CompleteFn {
   const url = chatCompletionsUrl(config.baseUrl);
   return async ({ system, user }) => {
     const controller = new AbortController();

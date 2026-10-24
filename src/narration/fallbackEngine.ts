@@ -11,17 +11,25 @@ export class FallbackEngine implements NarrationEngine {
     private readonly report: FallbackReporter = () => undefined,
   ) {}
 
-  async narrate(poi: Poi, lang: LanguageCode, context?: NarrationContext): Promise<string> {
+  narrate(poi: Poi, lang: LanguageCode, context?: NarrationContext): Promise<string> {
+    return this.run(context, (engine) => engine.narrate(poi, lang, context));
+  }
+
+  answer(poi: Poi, lang: LanguageCode, question: string, context?: NarrationContext): Promise<string> {
+    return this.run(context, (engine) => engine.answer?.(poi, lang, question, context) ?? Promise.resolve(''));
+  }
+
+  private async run(context: NarrationContext | undefined, call: (engine: NarrationEngine) => Promise<string>) {
     if (context?.offlineOnly) {
-      return this.fallback.narrate(poi, lang, context);
+      return call(this.fallback);
     }
     try {
-      const text = await this.primary.narrate(poi, lang, context);
+      const text = await call(this.primary);
       this.report(null);
       return text;
     } catch (error) {
       this.report(error);
-      return this.fallback.narrate(poi, lang, context);
+      return call(this.fallback);
     }
   }
 }

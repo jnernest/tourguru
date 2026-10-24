@@ -94,7 +94,18 @@ async function main() {
     console.log(`    ${(await page.getByText(/^Next: /).textContent()).trim()}`);
     await page.getByText('Open in Google Maps').waitFor({ timeout: 5_000 });
     console.log(`✔ discovery: ${(await page.getByText(/in total/).first().textContent()).trim()}`);
-    await page.getByText('⚙ Settings', { exact: false }).click();
+    const tab = (name) => page.getByText(name, { exact: true }).last();
+    await tab('Map').click();
+    await page.getByTestId('place-map').getByText(/ m$/).first().waitFor({ timeout: 10_000 });
+    console.log('✔ map tab lists the nearby places');
+    await tab('Guide').click();
+    await page.getByText('Stop walk', { exact: true }).click();
+    const walks = await page.evaluate(() => JSON.parse(localStorage.getItem('tourguide.walks') ?? '[]'));
+    if (!walks[0]?.places.length) throw new Error('walk diary not saved');
+    await tab('Diary').click();
+    await page.getByText('📤 Share this walk').first().waitFor({ timeout: 5_000 });
+    console.log(`✔ diary tab: ${walks[0].places.length} place(s), ${Math.round(walks[0].distanceM)} m`);
+    await tab('Settings').click();
     await page.getByText('Kids', { exact: true }).click();
     await page.getByText('History', { exact: true }).click();
     await page.getByText('+', { exact: true }).click();
@@ -104,10 +115,6 @@ async function main() {
       throw new Error(`settings not saved: ${JSON.stringify(saved)}`);
     }
     console.log(`✔ settings saved: ${JSON.stringify({ tone: saved.tone, interests: saved.interests, speechRate: saved.speechRate })}`);
-    await page.getByText('Stop walk', { exact: true }).click();
-    await page.getByText(/Share last walk \(\d+ places?\)/).waitFor({ timeout: 5_000 });
-    const walks = await page.evaluate(() => JSON.parse(localStorage.getItem('tourguide.walks') ?? '[]'));
-    console.log(`✔ diary saved: ${walks[0].places.length} places, ${Math.round(walks[0].distanceM)} m`);
     await page.screenshot({ path: SCREENSHOT, fullPage: true });
     console.log(`✔ screenshot: ${SCREENSHOT}`);
     if (pageErrors.length) throw new Error(`page error during walk: ${pageErrors[0]}`);

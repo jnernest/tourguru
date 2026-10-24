@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { chatCompletionsUrl, createChatComplete, providerName } from './openAiCompatibleClient';
+import { chatCompletionsUrl, createChatComplete, providerName, type ChatFetch } from './openAiCompatibleClient';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta/openai/';
 const prompt = { system: 'You are a guide.', user: 'Place: Karlstor' };
 
 function respond(status: number, body: unknown) {
-  return vi.fn<typeof fetch>(async () => new Response(JSON.stringify(body), { status }));
+  return vi.fn<ChatFetch>(async () => new Response(JSON.stringify(body), { status }));
 }
 
 describe('createChatComplete', () => {

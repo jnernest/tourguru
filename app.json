@@ -26,7 +26,11 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -37,7 +41,10 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "TourGuide uses your location to tell you about places you walk past. It is only sent to Wikipedia to look up nearby articles."
+          "locationWhenInUsePermission": "TourGuide uses your location to tell you about places you walk past. It is only sent to Wikipedia to look up nearby articles and to OpenFreeMap to draw the map.",
+          "locationAlwaysAndWhenInUsePermission": "TourGuide can keep telling you about places with the screen off, if you turn that on in Settings. Your location is only sent to Wikipedia to look up nearby articles and to OpenFreeMap to draw the map.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ],
       [
@@ -51,13 +58,22 @@
           }
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-router",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "TourGuide listens when you tap \"Ask a question\", so you can ask about the place in front of you."
+        }
+      ],
+      "@maplibre/maplibre-react-native"
     ],
     "extra": {
       "eas": {
         "projectId": "81606f95-233f-43f7-b0b5-e65f154d3fed"
       }
     },
-    "owner": "jnernest"
+    "owner": "jnernest",
+    "scheme": "tourguide"
   }
 }

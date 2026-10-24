@@ -1,6 +1,6 @@
 import { errorText, log, roundedCoords } from '../diagnostics/log';
 import { bearingDegrees, distanceMeters, relativeDirection } from '../geo/geo';
-import { LANGUAGES, type LanguageCode } from '../i18n/languages';
+import { LANGUAGES, phrase, type LanguageCode } from '../i18n/languages';
 import type { Fix } from '../location/fix';
 import {
   NO_CONTEXT,
@@ -147,12 +147,22 @@ export class GuideController {
     await this.interruptAndTell(poi, 'story');
   }
 
-  private async interruptAndTell(poi: Poi, depth: NarrationDepth): Promise<void> {
+  async ask(question: string): Promise<void> {
+    const poi = this.snapshot.current ?? this.snapshot.nearby[0]?.poi;
+    if (!poi) {
+      this.update({ error: 'No places found nearby yet.' });
+      return;
+    }
+    log('info', `Question about "${poi.title}": ${question}`);
+    await this.interruptAndTell(poi, 'brief', question);
+  }
+
+  private async interruptAndTell(poi: Poi, depth: NarrationDepth, question?: string): Promise<void> {
     if (this.snapshot.status === 'narrating') {
       await this.skip();
       await this.narration;
     }
-    this.narration = this.narrate(poi, depth);
+    this.narration = this.narrate(poi, depth, question);
     await this.narration;
   }
 
@@ -230,12 +240,16 @@ export class GuideController {
     this.update({ ...this.discovery(this.snapshot.nearby), badge });
   }
 
-  private async narrate(poi: Poi, depth: NarrationDepth = 'brief'): Promise<void> {
+  private async narrate(poi: Poi, depth: NarrationDepth = 'brief', question?: string): Promise<void> {
     this.update({ status: 'narrating', current: poi, narration: null });
     log('info', `Narrating "${poi.title}" [${poi.lang}→${this.lang}, ${depth}]`);
     try {
       await this.markDiscovered(poi);
-      const text = await this.deps.engine.narrate(poi, this.lang, this.contextFor(poi, depth));
+      const context = this.contextFor(poi, depth);
+      const { engine } = this.deps;
+      const text = question
+        ? ((await engine.answer?.(poi, this.lang, question, context)) ?? phrase(this.lang, 'noAnswer', poi.title))
+        : await engine.narrate(poi, this.lang, context);
       this.update({ narration: text });
       const { speechRate, voiceId } = this.settings;
       const outcome = await this.deps.speaker.speak(text, LANGUAGES[this.lang].ttsLocale, { rate: speechRate, voiceId });

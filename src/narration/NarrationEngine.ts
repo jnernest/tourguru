@@ -16,4 +16,5 @@ export const NO_CONTEXT: NarrationContext = { distanceM: null, direction: null }
 
 export interface NarrationEngine {
   narrate(poi: Poi, lang: LanguageCode, context?: NarrationContext): Promise<string>;
+  answer?(poi: Poi, lang: LanguageCode, question: string, context?: NarrationContext): Promise<string>;
 }

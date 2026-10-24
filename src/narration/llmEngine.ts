@@ -12,7 +12,14 @@ export class LlmEngine implements NarrationEngine {
   ) {}
 
   async narrate(poi: Poi, lang: LanguageCode, context: NarrationContext = NO_CONTEXT): Promise<string> {
-    const source = this.loadText ? { ...poi, summary: await this.loadText(poi) } : poi;
-    return this.complete(buildNarrationPrompt(source, lang, context));
+    return this.complete(buildNarrationPrompt(await this.withText(poi), lang, context));
+  }
+
+  async answer(poi: Poi, lang: LanguageCode, question: string, context: NarrationContext = NO_CONTEXT): Promise<string> {
+    return this.complete(buildNarrationPrompt(await this.withText(poi), lang, context, question));
+  }
+
+  private async withText(poi: Poi): Promise<Poi> {
+    return this.loadText ? { ...poi, summary: await this.loadText(poi) } : poi;
   }
 }

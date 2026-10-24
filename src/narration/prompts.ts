@@ -11,6 +11,7 @@ export interface NarrationPrompt {
 
 export const MAX_SOURCE_CHARS = 4_000;
 export const MAX_STORY_SOURCE_CHARS = 9_000;
+const MAX_QUESTION_CHARS = 300;
 
 const SYSTEM_PROMPT = `You are a friendly, knowledgeable walking-tour guide talking to someone near a place right now. Your words are read aloud by text-to-speech.
 
@@ -33,6 +34,10 @@ Mode "story" (the full story, told as the listener reaches the place or when the
 - Then tell the history of the place as a story, in chronological order: how it began, who built or changed it and why, the turning points, and what it is today. Use the dates the source gives.
 - Then one sentence that starts with "Fun fact:" (in the requested language) with the most surprising legend, anecdote, record or curiosity in the source. Leave it out if the source has none.
 - 140 to 220 words.
+
+Mode "answer" (the listener asked a question, given inside <question>):
+- Answer that question directly in one to three sentences, using only the source.
+- If the source does not answer it, say briefly that you do not know, and add one related fact from the source if there is one.
 
 The request also names the listener's interests and a tone.
 - Interests: when the source has material on them, prefer it; never invent it.
@@ -58,12 +63,18 @@ function sourceFor(text: string, story: boolean): string {
   return (history ? `${history}\n\n${text}` : text).slice(0, MAX_STORY_SOURCE_CHARS);
 }
 
-export function buildNarrationPrompt(poi: Poi, lang: LanguageCode, context: NarrationContext = NO_CONTEXT): NarrationPrompt {
+export function buildNarrationPrompt(
+  poi: Poi,
+  lang: LanguageCode,
+  context: NarrationContext = NO_CONTEXT,
+  question?: string,
+): NarrationPrompt {
   const story = context.depth === 'story';
+  const mode = question ? 'answer' : story ? 'story' : 'brief';
   return {
     system: SYSTEM_PROMPT,
     user: [
-      `Mode: ${story ? 'story' : 'brief'}`,
+      `Mode: ${mode}`,
       `Language: ${LANGUAGES[lang].englishName}`,
       `Place: ${poi.title}`,
       `Position: ${describePosition(context)}`,
@@ -71,7 +82,8 @@ export function buildNarrationPrompt(poi: Poi, lang: LanguageCode, context: Narr
       `Tone: ${context.tone ?? 'standard'}`,
       `Source language code: ${poi.lang}`,
       '',
-      `<source>\n${sourceFor(poi.summary, story)}\n</source>`,
+      ...(question ? [`<question>\n${question.slice(0, MAX_QUESTION_CHARS)}\n</question>`] : []),
+      `<source>\n${sourceFor(poi.summary, story || question !== undefined)}\n</source>`,
     ].join('\n'),
   };
 }

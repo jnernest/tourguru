@@ -1,5 +1,6 @@
 import * as Speech from 'expo-speech';
 
+import { duckOtherAudio } from './mediaControls';
 import { speechTimeoutMs } from './speechTimeout';
 
 export type SpeakOutcome = 'done' | 'stopped' | 'error' | 'timeout';
@@ -17,7 +18,8 @@ export interface Speaker {
 export const expoSpeaker: Speaker = {
   speak(text, locale, voice = {}) {
     const rate = voice.rate ?? 1;
-    return new Promise((resolve) => {
+    duckOtherAudio(true);
+    return new Promise<SpeakOutcome>((resolve) => {
       // Some devices never fire onDone (e.g. no voice for the locale); never wait forever.
       const timer = setTimeout(() => {
         void Speech.stop();
@@ -35,7 +37,7 @@ export const expoSpeaker: Speaker = {
         onStopped: finish('stopped'),
         onError: finish('error'),
       });
-    });
+    }).finally(() => duckOtherAudio(false));
   },
   stop() {
     return Speech.stop();

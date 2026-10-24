@@ -228,4 +228,19 @@ describe('GuideController', () => {
     await t.controller.skip();
     expect(t.deps.speaker.stop).toHaveBeenCalled();
   });
+
+  it('answers a spoken question about the current place', async () => {
+    const t = setup([poiNorth('a', 30, { title: 'Old Tower', summary: 'Old Tower is a gate. It was built in 1340 by the city council.' })]);
+    await t.settleAt(0);
+    await t.controller.ask('Who built the tower?');
+    expect(t.spoken.at(-1)?.text).toBe('It was built in 1340 by the city council.');
+    expect(t.controller.state).toMatchObject({ status: 'idle', current: { id: 'a' } });
+  });
+
+  it('says so when asked before any place is known', async () => {
+    const t = setup([]);
+    await t.controller.ask('What is this?');
+    expect(t.spoken).toHaveLength(0);
+    expect(t.controller.state.error).toBe('No places found nearby yet.');
+  });
 });
