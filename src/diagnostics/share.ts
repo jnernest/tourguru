@@ -9,7 +9,6 @@ interface ErrorUtilsLike {
 
 let installed = false;
 
-/** Records uncaught JS errors in the diagnostic log before React Native handles them as usual. */
 export function captureUncaughtErrors(): void {
   const errorUtils = (globalThis as { ErrorUtils?: ErrorUtilsLike }).ErrorUtils;
   if (installed || !errorUtils) return;
@@ -22,7 +21,6 @@ export function captureUncaughtErrors(): void {
   });
 }
 
-/** Opens the system share sheet with the diagnostic log (email, chat, notes…). */
 export async function shareDiagnostics(context: Record<string, string>): Promise<void> {
   const details = Object.entries(context).map(([k, v]) => `${k}=${v}`).join(' ');
   const header = `TourGuide diagnostics · ${Platform.OS} ${String(Platform.Version)} · ${details}`;

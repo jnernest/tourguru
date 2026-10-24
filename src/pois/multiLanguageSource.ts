@@ -3,11 +3,6 @@ import type { Poi, PoiSource } from './types';
 
 export type LocalLanguageAt = (center: LatLon) => Promise<string | null>;
 
-/**
- * Queries the user's Wikipedia and the local one (e.g. German in Vienna) and merges them.
- * A place covered by both (same Wikidata id) keeps the user's-language version; places only
- * the local edition knows are added as they are, to be narrated in translation.
- */
 export function createMultiLanguageSource(base: PoiSource, localLanguageAt: LocalLanguageAt): PoiSource {
   return {
     async nearby(center, radiusM, lang) {

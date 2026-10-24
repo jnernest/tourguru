@@ -23,7 +23,6 @@ function gpsStatus({ gpsAccuracyM, gpsWeak }: GuideSnapshot): string {
     : `GPS: ${accuracy}`;
 }
 
-/** Everything above the place list; scrolls together with it. */
 function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
   return (
     <View>
@@ -62,7 +61,6 @@ function GuideHeader({ guide }: { guide: ReturnType<typeof useGuide> }) {
   );
 }
 
-/** While walking: ask about surroundings or get a suggested route. Otherwise: the demo walk. */
 function WalkTools({ guide }: { guide: ReturnType<typeof useGuide> }) {
   if (!guide.walking) {
     return (

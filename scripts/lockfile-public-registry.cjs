@@ -1,13 +1,6 @@
-/**
- * Rewrites package-lock.json tarball URLs from a private Nexus mirror
- * (https://<host>/repository/<repo>/...) to the public npm registry, which EAS Build can reach.
- * Locally nothing changes in practice: npm maps registry.npmjs.org URLs back to the configured
- * registry (default `replace-registry-host=npmjs`). Runs automatically before `npm run apk`.
- */
 const fs = require('node:fs');
 const path = require('node:path');
 
-// npm runs scripts from the package root.
 const LOCKFILE = path.resolve('package-lock.json');
 const NEXUS_PREFIX = /^https?:\/\/[^/]+\/repository\/[^/]+\//;
 const PUBLIC_REGISTRY = 'https://registry.npmjs.org/';

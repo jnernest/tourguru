@@ -1,6 +1,5 @@
 import type { LanguageCode } from './languages';
 
-/** Spoken templates for structured facts; `{x}` is the value. */
 export interface FactPhrases {
   built: string;
   opened: string;
@@ -10,7 +9,6 @@ export interface FactPhrases {
   heritage: string;
   height: string;
   namedAfter: string;
-  /** Joins two names: "A and B". */
   and: string;
 }
 

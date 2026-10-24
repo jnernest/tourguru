@@ -1,9 +1,3 @@
-/**
- * Smoke test: executes the exported web bundle in Node with a minimal fake DOM, to catch
- * module-initialisation crashes (like a TDZ ReferenceError) that `expo export` alone misses.
- * Usage: npx expo export --platform web --output-dir <dir> && node scripts/smoke-web-bundle.cjs <dir>
- * Exit 0 = every module initialised and the app reached React rendering.
- */
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
@@ -45,7 +39,6 @@ const sandbox = {
   crypto: globalThis.crypto,
   performance,
   structuredClone,
-  // Dev bundles open a hot-reload socket before loading app code.
   WebSocket: class {
     send() {}
     close() {}

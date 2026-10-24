@@ -85,7 +85,6 @@ describe('ExtractiveEngine', () => {
         `${opening('en', NO_CONTEXT, PALACE_NAME, 'Q131330')} Built in 1638. Designed by Johann Bernhard Fischer von Erlach. ` +
           'Its style is Baroque. With 1,441 rooms it is one of the most important Baroque buildings in Austria.',
       );
-      // Only the one highlight sentence is translated, not the definition or the whole article.
       expect(translator.translate).toHaveBeenCalledTimes(1);
       expect(translator.translate).toHaveBeenCalledWith(expect.stringContaining('1441 Räumen'), 'de', 'en');
     });

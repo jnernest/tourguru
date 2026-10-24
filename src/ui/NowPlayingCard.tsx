@@ -12,14 +12,11 @@ interface Props {
   narration: string | null;
   status: GuideStatus;
   onSkip: () => void;
-  /** History and a fun fact about this place. */
   onMore: () => void;
 }
 
-/** Keeps portrait photos from pushing everything else off the screen. */
 const MIN_ASPECT = 4 / 3;
 const MAX_ASPECT = 16 / 9;
-/** The narration is heard; the text is a reminder, unfolded on tap. */
 const COLLAPSED_LINES = 2;
 
 export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props) {
@@ -77,7 +74,6 @@ export function NowPlayingCard({ poi, narration, status, onSkip, onMore }: Props
 const styles = StyleSheet.create({
   card: { margin: 16, borderRadius: 12, backgroundColor: colors.surface, overflow: 'hidden' },
   padded: { padding: 16, gap: 6 },
-  // Capped so the nearby list stays visible on small phones and wide screens alike.
   photo: { width: '100%', maxHeight: 220 },
   label: { color: colors.muted, fontSize: 12, textTransform: 'uppercase' },
   title: { color: colors.text, fontSize: 20, fontWeight: '700' },

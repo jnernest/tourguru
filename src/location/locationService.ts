@@ -4,12 +4,10 @@ import { Platform } from 'react-native';
 import type { LatLon } from '../geo/geo';
 import { toFix, type Fix } from './fix';
 
-// A distance threshold alone means no updates at all while the user sits still; use a time
-// interval instead (Android only; iOS reports on change regardless).
+// 0 m: a distance threshold alone sends no updates while sitting still (Android).
 const DISTANCE_INTERVAL_M = 0;
 const TIME_INTERVAL_MS = 5_000;
 
-/** ISO country code at a coordinate via the phone's geocoder. Not available on web. */
 export async function lookupCountry(center: LatLon): Promise<string | null> {
   if (Platform.OS === 'web') {
     return null;
@@ -21,7 +19,6 @@ export async function lookupCountry(center: LatLon): Promise<string | null> {
   return address?.isoCountryCode ?? null;
 }
 
-/** Starts foreground GPS updates. Returns an unsubscribe function. */
 export async function startLocationWatch(
   onFix: (fix: Fix) => void,
   onError: (reason: string) => void,

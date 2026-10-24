@@ -16,9 +16,7 @@ import { badgeEarned } from './discovery';
 import { selectCandidate, StabilityGate } from './trigger';
 
 export const FETCH_RADIUS_M = 500;
-/** Re-query Wikipedia once the walker is this far from the last query centre. */
 export const REFETCH_DISTANCE_M = 150;
-/** Fixes worse than this are too vague to decide what the user is standing next to. */
 export const MAX_ACCURACY_M = 50;
 export const COOLDOWN_MS = 15_000;
 export const STABLE_FIXES = 2;
@@ -28,21 +26,13 @@ export type GuideStatus = 'idle' | 'narrating';
 export interface GuideSnapshot {
   status: GuideStatus;
   nearby: RankedPoi[];
-  /** Place being narrated, or the last one narrated. */
   current: Poi | null;
-  /** Text spoken (or being spoken) for `current`. */
   narration: string | null;
-  /** Accuracy of the latest GPS fix in metres, null before the first fix. */
   gpsAccuracyM: number | null;
-  /** True when the latest fix was too imprecise to use. */
   gpsWeak: boolean;
-  /** Latest usable fix, for route guidance. */
   position: Fix | null;
-  /** Ids of nearby places already heard (✓ in the list). */
   discoveredIds: string[];
-  /** Places heard about in total, across walks. */
   discoveredTotal: number;
-  /** Badge earned by the latest narration, until the next one. */
   badge: string | null;
   error: string | null;
 }
@@ -66,15 +56,7 @@ export interface GuideDeps {
   engine: NarrationEngine;
   speaker: Speaker;
   told: ToldStore;
-  /**
-   * Whether the engine can narrate an article written in another language (AI on). If not,
-   * automatic narration skips those places; they can still be tapped.
-   */
   canTranslate: boolean;
-  /**
-   * How much to tell automatically and on tap: the full story when an AI tells it well,
-   * the short key facts when narration is offline. "Tell me more" always tells the story.
-   */
   autoDepth?: NarrationDepth;
   now: () => number;
   onChange: (snapshot: GuideSnapshot) => void;
@@ -103,7 +85,6 @@ export class GuideController {
     return this.snapshot;
   }
 
-  /** Feed every GPS fix here. Overlapping calls are dropped; the next fix catches up. */
   async onLocation(fix: Fix): Promise<void> {
     const weak = fix.accuracyM !== null && fix.accuracyM > MAX_ACCURACY_M;
     if (weak !== this.snapshot.gpsWeak || this.snapshot.gpsAccuracyM === null) {
@@ -131,20 +112,13 @@ export class GuideController {
     }
   }
 
-  /**
-   * Re-runs the decision with the last good fix. Phones often send no new fix while the user
-   * sits still, so call this on a timer to let the stability gate and cooldown progress.
-   */
+  // Phones often send no new fix while still; a timer lets the gate and cooldown progress.
   async reevaluate(): Promise<void> {
     if (this.lastFix) {
       await this.onLocation(this.lastFix);
     }
   }
 
-  /**
-   * Narrates a place on request, ignoring distance and cooldown: the given one, or else the
-   * best-ranked place not told yet. Interrupts any narration in progress.
-   */
   async tellAbout(poiId?: string): Promise<void> {
     const { nearby } = this.snapshot;
     const target = poiId
@@ -158,7 +132,6 @@ export class GuideController {
     await this.interruptAndTell(target.poi, this.autoDepth);
   }
 
-  /** "Tell me more": the history and a fun fact about the place on the card. */
   async tellMore(): Promise<void> {
     const poi = this.snapshot.current;
     if (!poi) {
@@ -177,7 +150,6 @@ export class GuideController {
     await this.narration;
   }
 
-  /** Stops the current narration. The place stays marked as told. */
   async skip(): Promise<void> {
     await this.deps.speaker.stop();
   }
@@ -190,12 +162,10 @@ export class GuideController {
     this.update({ nearby: [] });
   }
 
-  /** Resolves once any in-flight narration has finished. */
   isTold(poiId: string): boolean {
     return this.deps.told.has(poiId);
   }
 
-  /** Re-reads discovery state, e.g. after the history was reset. */
   refreshDiscovery(): void {
     this.update({ ...this.discovery(this.snapshot.nearby), badge: null });
   }
@@ -234,7 +204,6 @@ export class GuideController {
     }
   }
 
-  /** Distance and side of the place as seen from the last fix, for "On your right is…". */
   private contextFor(poi: Poi, depth: NarrationDepth): NarrationContext {
     const fix = this.lastFix;
     if (!fix) return { ...NO_CONTEXT, depth };
@@ -245,7 +214,6 @@ export class GuideController {
     };
   }
 
-  /** Records the place as heard and announces a badge if this discovery earned one. */
   private async markDiscovered(poi: Poi): Promise<void> {
     const before = this.deps.told.count();
     await this.deps.told.add(poi.id, this.deps.now());
@@ -278,7 +246,6 @@ export class GuideController {
   }
 }
 
-/** "en:7 de:9" */
 function countBy(values: string[]): string {
   const counts = new Map<string, number>();
   values.forEach((v) => counts.set(v, (counts.get(v) ?? 0) + 1));

@@ -15,6 +15,5 @@ android {
 }
 
 dependencies {
-  // Google ML Kit on-device translation. Language models (~30 MB each) download at runtime.
   implementation 'com.google.mlkit:translate:17.0.3'
 }

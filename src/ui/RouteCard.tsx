@@ -23,7 +23,6 @@ function formatDistance(m: number): string {
   return m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 }
 
-/** "Frauenkirche · 180 m on your left" */
 function nextStopLine(position: Fix | null, stop: { title: string; lat: number; lon: number }): string {
   if (!position) return stop.title;
   const distance = formatDistance(distanceMeters(position, stop));
@@ -31,7 +30,6 @@ function nextStopLine(position: Fix | null, stop: { title: string; lat: number; 
   return `${stop.title} · ${distance}${side}`;
 }
 
-/** The suggested walk: progress, the next stop, and turn-by-turn directions in Google Maps. */
 export function RouteCard({ plan, position, isTold, onEnd }: Props) {
   const next = nextStop(plan, isTold);
   const visited = plan.stops.filter((s) => isTold(s.id)).length;

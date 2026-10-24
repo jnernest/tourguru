@@ -1,7 +1,6 @@
 import type { Position } from '../pois/poiRanker';
 
 export interface Fix extends Position {
-  /** Horizontal accuracy radius in metres, or null when unknown. */
   accuracyM: number | null;
   timestamp: number;
 }
@@ -14,7 +13,6 @@ interface RawCoords {
   speed: number | null;
 }
 
-/** Below walking pace the GPS course is noise, so heading is dropped. */
 const MIN_SPEED_FOR_HEADING_MPS = 0.5;
 
 export function toFix(coords: RawCoords, timestamp: number): Fix {

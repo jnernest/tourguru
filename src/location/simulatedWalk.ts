@@ -1,7 +1,6 @@
 import { bearingDegrees, distanceMeters, type LatLon } from '../geo/geo';
 import type { Fix } from './fix';
 
-/** Munich old town: Karlstor → St. Michael → Frauenkirche → Marienplatz → Viktualienmarkt. */
 export const MUNICH_OLD_TOWN: LatLon[] = [
   { lat: 48.13913, lon: 11.56636 }, // Karlstor
   { lat: 48.13885, lon: 11.57062 }, // St. Michael
@@ -14,7 +13,6 @@ export const MUNICH_OLD_TOWN: LatLon[] = [
 
 const SIMULATED_ACCURACY_M = 5;
 
-/** Points every `stepM` metres along the route, each with its direction of travel. */
 export function interpolateRoute(waypoints: LatLon[], stepM: number): Fix[] {
   const fixes: Fix[] = [];
   for (let i = 0; i < waypoints.length - 1; i++) {
@@ -42,15 +40,12 @@ export function interpolateRoute(waypoints: LatLon[], stepM: number): Fix[] {
 
 export interface SimulatedWalkOptions {
   route?: LatLon[];
-  /** Metres covered per tick. */
   stepM?: number;
   tickMs?: number;
-  /** While true the walker stands still, e.g. to listen to a narration. */
   isPaused?: () => boolean;
   onFinished?: () => void;
 }
 
-/** Replays a route as GPS fixes, faster than walking pace. Returns a stop function. */
 export function startSimulatedWalk(onFix: (fix: Fix) => void, options: SimulatedWalkOptions = {}): () => void {
   const { route = MUNICH_OLD_TOWN, stepM = 10, tickMs = 1_000, isPaused = () => false, onFinished } = options;
   const fixes = interpolateRoute(route, stepM);

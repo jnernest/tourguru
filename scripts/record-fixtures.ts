@@ -1,7 +1,3 @@
-/**
- * Re-records the Wikipedia fixtures used by the tests, using the app's own query builder.
- * Run: npm run fixtures
- */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -11,7 +7,6 @@ import { buildGeoQueryUrl } from '../src/pois/wikipediaSource';
 
 const MARIENPLATZ = { lat: 48.1374, lon: 11.5755 };
 const LANGS: LanguageCode[] = ['en', 'de'];
-/** Keeps fixtures small; the tests only need the start of each lead section. */
 const MAX_EXTRACT_CHARS = 700;
 const OUT_DIR = join(__dirname, '..', 'src', '__fixtures__');
 

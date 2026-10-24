@@ -9,17 +9,12 @@ import { funFact, historyTimeline, isStoryLike } from './history';
 import { highlight, summarize } from './summarizer';
 
 export interface ExtractiveEngineDeps {
-  /** Full article text for a place; defaults to the lead fetched with it. */
   loadText?: (poi: Poi) => Promise<string>;
-  /** On-device translation for articles in another language; none = say it can't be read. */
   translator?: Translator | null;
-  /** Called with the reason whenever translation was needed but did not work. */
   onTranslationFailed?: (reason: string) => void;
-  /** Name, description and key facts in the user's language (Wikidata). */
   describe?: (wikidataId: string, lang: LanguageCode) => Promise<EntityText | null>;
 }
 
-/** With fewer structured facts than this, a summary of the article says more. */
 const MIN_FACTS_FOR_KEY_POINTS = 2;
 
 interface Request {
@@ -28,12 +23,6 @@ interface Request {
   context: NarrationContext;
 }
 
-/**
- * Offline narration without a language model, told like a guide: where to look ("On your
- * right is…"), what the place is, its key facts (Wikidata, already in the user's language)
- * and one highlight from the article. Falls back to an extractive summary. Only verbatim
- * source text is used, translated on the device if needed, so nothing can be invented.
- */
 export class ExtractiveEngine implements NarrationEngine {
   constructor(private readonly deps: ExtractiveEngineDeps = {}) {}
 
@@ -61,7 +50,6 @@ export class ExtractiveEngine implements NarrationEngine {
     return entity ? this.keyPoints(req, entity, '') : phrase(lang, 'otherLanguage', poi.title);
   }
 
-  /** "On your right is Schönbrunn Palace, a palace in Vienna. Built in 1638. … Fun fact: …" */
   private async keyPoints({ poi, lang, context }: Request, entity: EntityText, text: string): Promise<string> {
     const name = nameWithDescription(lang, entity.label ?? poi.title, entity.description);
     const best = text ? highlight(text, poi.title) : '';
@@ -70,10 +58,8 @@ export class ExtractiveEngine implements NarrationEngine {
     return [opening(lang, context, name, poi.id), ...entity.facts, said ?? ''].filter((part) => part.length > 0).join(' ');
   }
 
-  /** "Tell me more": the history in chronological order, then a fun fact. */
   private async story({ poi, lang, context }: Request, entity: EntityText | null, text: string): Promise<string> {
     const name = entity?.label ?? poi.title;
-    // Point the place out when we know where it is (told while walking); else announce the story.
     const intro =
       context.distanceM === null
         ? phrase(lang, 'storyIntro', name)
@@ -95,7 +81,6 @@ export class ExtractiveEngine implements NarrationEngine {
       .join(' ');
   }
 
-  /** The text as is when it is already in the user's language, else translated; null if impossible. */
   private async inUserLanguage(text: string, from: string, to: string): Promise<string | null> {
     if (!text) return '';
     return from === to ? text : this.translate(text, from, to);

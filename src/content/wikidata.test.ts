@@ -6,7 +6,6 @@ import { buildEntityUrl, createEntityDescriber, extractRawFacts, formatFacts } f
 const entityRef = (id: string) => ({ mainsnak: { datavalue: { type: 'wikibase-entityid', value: { id } } } });
 const time = (t: string, precision = 9) => ({ mainsnak: { datavalue: { type: 'time', value: { time: t, precision } } } });
 
-// Shaped like the real wbgetentities response for Schönbrunn Palace (Q131330).
 const PALACE = {
   labels: { en: { value: 'Schönbrunn Palace' }, de: { value: 'Schloss Schönbrunn' } },
   descriptions: { en: { value: 'palace in Vienna, Austria' } },

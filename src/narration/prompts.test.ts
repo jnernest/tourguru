@@ -29,7 +29,6 @@ describe('buildNarrationPrompt', () => {
     });
     const story = buildNarrationPrompt(article, 'en', { distanceM: null, direction: null, depth: 'story' });
     expect(story.user).toMatch(/^Mode: story/);
-    // The history section leads the source, so it survives the length cap.
     expect(story.user).toMatch(/<source>\nThe gate was first mentioned in 1302\./);
     expect(story.system).toMatch(/chronological order/);
     expect(story.system).toMatch(/Fun fact:/);

@@ -7,15 +7,11 @@ import { colors } from './theme';
 
 interface Props {
   image: PoiImage | null;
-  /** Spoken by screen readers; also the placeholder initial. */
   title: string;
   style: StyleProp<ViewStyle>;
 }
 
-/**
- * A place's Wikimedia picture, or a neutral placeholder with its initial when there is none
- * or it fails to load. Sends the app's User-Agent, as Wikimedia asks of API clients.
- */
+// Sends the app's User-Agent, as Wikimedia asks of API clients.
 export function PlaceImage({ image, title, style }: Props) {
   const [failed, setFailed] = useState(false);
   if (!image || failed) {

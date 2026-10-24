@@ -8,7 +8,6 @@ describe('speechTimeoutMs', () => {
   });
 
   it('allows well over normal speaking time for a typical narration', () => {
-    // ~600 characters ≈ 40 s at a normal pace.
     expect(speechTimeoutMs('x'.repeat(600))).toBe(125_000);
   });
 });

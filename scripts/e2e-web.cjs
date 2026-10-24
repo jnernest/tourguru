@@ -1,8 +1,3 @@
-/**
- * End-to-end check in a real browser: serves an exported web build, opens it in the locally
- * installed Chrome, clicks "Simulate a walk" and waits for a real narration (live Wikipedia).
- * Usage: npx expo export --dev --platform web --output-dir .smoke-web && node scripts/e2e-web.cjs .smoke-web
- */
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
@@ -37,7 +32,6 @@ async function main() {
   const executablePath = CHROME_PATHS.find((p) => fs.existsSync(p));
   const browser = await chromium.launch({ executablePath, headless: true });
   const context = await browser.newContext({
-    // A typical Android phone, so the screenshot shows the real layout.
     viewport: { width: 412, height: 915 },
     deviceScaleFactor: 2,
     permissions: ['geolocation'],
@@ -71,7 +65,6 @@ async function main() {
 
     const before = await narration.textContent();
     await page.getByText('Tell me more', { exact: false }).click();
-    // The story replaces the narration once ready (it can start the same way when walking).
     await page.waitForFunction(
       (prev) => {
         const t = document.querySelector('[data-testid="narration"]')?.textContent ?? '';

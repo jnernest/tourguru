@@ -3,15 +3,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { CompleteFn } from './llmEngine';
 
 export const CLAUDE_MODEL = 'claude-opus-5-5';
-/** A walker has moved on after ~10 s; better to fall back than to keep waiting. */
 const REQUEST_TIMEOUT_MS = 10_000;
-/** Room for the model's (low-effort) reasoning plus a ~150-token narration. */
 const MAX_TOKENS = 2_000;
 
-/**
- * PERSONAL USE ONLY: the API key is compiled into the app bundle, where anyone holding the
- * app can extract it. Before sharing the app with anyone, move this call behind a backend.
- */
+// Personal use only: the API key is compiled into the bundle; move behind a backend before sharing.
 export function createClaudeComplete(apiKey: string): CompleteFn {
   const client = new Anthropic({
     apiKey,

@@ -4,15 +4,10 @@ import type { CompleteFn } from './llmEngine';
 import { createChatComplete, providerName } from './openAiCompatibleClient';
 
 export interface AiProvider {
-  /** "Gemini (gemini-3.5-flash-lite)", for the footer and the diagnostic log. */
   label: string;
   complete: CompleteFn;
 }
 
-/**
- * The configured AI for narration: an OpenAI-compatible provider (default: Gemini free tier)
- * if its key is set, else Claude if its key is set, else none (offline narration only).
- */
 export function createAiProvider(): AiProvider | null {
   if (LLM_API_KEY) {
     const name = providerName(LLM_BASE_URL);

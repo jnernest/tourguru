@@ -1,9 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
-/** Remembers which places have already been narrated, across app restarts. */
 export interface ToldStore {
   has(poiId: string): boolean;
-  /** Places discovered so far, for the discovery badges. */
   count(): number;
   add(poiId: string, at: number): Promise<void>;
   clear(): Promise<void>;

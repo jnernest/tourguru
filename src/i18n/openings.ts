@@ -1,10 +1,6 @@
 import type { Direction } from '../geo/geo';
 import type { LanguageCode } from './languages';
 
-/**
- * How a guide points a place out: where to look, not a fixed "Nearby:". `{name}` is the
- * place (with its description when known); `{distance}` a spoken distance.
- */
 export type OpeningKind = Direction | 'near' | 'far';
 
 type Openings = Record<OpeningKind, string[]> & { metres: string; kilometres: string };
@@ -72,13 +68,10 @@ const OPENINGS: Record<LanguageCode, Openings> = {
   },
 };
 
-/** Beyond this the place is not "here"; say how far instead (e.g. tapped in the list). */
 export const FAR_THRESHOLD_M = 250;
 
 export interface OpeningContext {
-  /** Distance to the place, or null when unknown. */
   distanceM: number | null;
-  /** Where to look, or null when the walker's heading is unknown (standing still). */
   direction: Direction | null;
 }
 
@@ -95,7 +88,7 @@ export function spokenDistance(lang: LanguageCode, metres: number): string {
   return o.metres.replace('{n}', String(Math.round(metres / 10) * 10));
 }
 
-/** Stable small hash so the same place always gets the same wording, but places differ. */
+// Stable hash: the same place always gets the same wording, but places differ.
 function variantIndex(seed: string, count: number): number {
   let h = 0;
   for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -109,13 +102,8 @@ export function opening(lang: LanguageCode, ctx: OpeningContext, name: string, s
   return variants[variantIndex(seed, variants.length)].replace('{distance}', distance).replace('{name}', name);
 }
 
-/**
- * Joins a place name and its Wikidata description for speech: "Schönbrunn Palace, a palace
- * in Vienna, Austria". Only English gets an article; elsewhere gender makes it unreliable.
- */
 export function nameWithDescription(lang: LanguageCode, name: string, description: string | null): string {
   if (!description) return name;
-  // Some descriptions already start with an article ("a church in Munich").
   if (lang === 'en' && /^[a-z]/.test(description) && !/^(?:a|an|the)\s/.test(description)) {
     // "a university", "a one-way street": these vowels are spoken as consonants.
     const vowelSound = /^[aeiou]/.test(description) && !/^(?:uni|use|usu|eu|one|once)/.test(description);

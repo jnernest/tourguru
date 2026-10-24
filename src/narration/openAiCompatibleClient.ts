@@ -1,21 +1,13 @@
 import type { CompleteFn } from './llmEngine';
 
-/**
- * Any provider with an OpenAI-compatible Chat Completions endpoint: Google Gemini (free tier),
- * Groq, OpenRouter, Mistral, a local Ollama, …
- */
 export interface LlmConfig {
-  /** e.g. https://generativelanguage.googleapis.com/v1beta/openai/ */
   baseUrl: string;
   model: string;
   apiKey: string;
-  /** Lower = faster. Gemini 3 cannot turn thinking off; "minimal" is the lowest it accepts. */
   reasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
 }
 
-/** A walker has moved on after ~12 s; better to fall back than to keep waiting. */
 const REQUEST_TIMEOUT_MS = 12_000;
-/** A ~90-word narration plus a little reasoning. */
 const MAX_TOKENS = 1_024;
 
 interface ChatResponse {
@@ -23,7 +15,6 @@ interface ChatResponse {
   error?: { message?: string; status?: string };
 }
 
-/** "Gemini", "Groq", … from the endpoint, for the footer and the diagnostic log. */
 export function providerName(baseUrl: string): string {
   const host = /^https:\/\/([^/]+)/.exec(baseUrl)?.[1] ?? baseUrl;
   if (host.includes('generativelanguage.googleapis.com')) return 'Gemini';
@@ -49,10 +40,7 @@ async function errorFor(res: { status: number; json(): Promise<unknown> }): Prom
   return new Error(`AI request failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`);
 }
 
-/**
- * PERSONAL USE ONLY: the API key is compiled into the app bundle. Before sharing the app,
- * move this call behind a backend.
- */
+// Personal use only: the API key is compiled into the bundle; move behind a backend before sharing.
 export function createChatComplete(config: LlmConfig, fetchFn: typeof fetch = fetch): CompleteFn {
   const url = chatCompletionsUrl(config.baseUrl);
   return async ({ system, user }) => {

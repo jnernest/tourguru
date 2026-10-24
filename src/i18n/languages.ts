@@ -1,8 +1,3 @@
-/**
- * Narration languages. The code doubles as the Wikipedia subdomain ({code}.wikipedia.org);
- * places may also come from other (local) Wikipedias, see pois/localLanguage.ts.
- * Phrases use `{title}` as the only placeholder.
- */
 export const LANGUAGES = {
   en: {
     label: 'English',

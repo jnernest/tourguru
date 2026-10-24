@@ -1,10 +1,8 @@
-// https://docs.expo.dev/guides/customizing-metro/
 const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-// @anthropic-ai/sdk's ESM build (.mjs) has circular imports that crash Metro bundles with
-// "Cannot access '…' before initialization". Resolve its CommonJS build instead.
+// The SDK's ESM build has circular imports that crash Metro; force its CommonJS build.
 const SDK = '@anthropic-ai/sdk';
 const upstreamResolve = config.resolver.resolveRequest;
 

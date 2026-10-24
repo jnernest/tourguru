@@ -7,13 +7,9 @@ import { colors } from './theme';
 
 interface Props {
   items: RankedPoi[];
-  /** The narration language; places from another Wikipedia edition get a language tag. */
   lang: string;
-  /** Tap a place to hear about it now. */
   onSelect: (poiId: string) => void;
-  /** Content above the list (the now-playing card, controls); scrolls with it as one page. */
   header?: ReactElement;
-  /** Places already heard: shown with a ✓. */
   discoveredIds: string[];
 }
 

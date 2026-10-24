@@ -3,19 +3,16 @@ import { contentWords, proseOnly, splitSentences, stripParentheticals } from '..
 import { isFunFact, standsAlone, storyBonus } from '../text/storyCues';
 import { wordFrequencies } from './summarizer';
 
-/** A "tell me more" story: ~1–2 minutes of speech. */
 const MAX_TIMELINE_SENTENCES = 5;
 const MAX_STORY_CHARS = 900;
 const MIN_SENTENCE_CHARS = 40;
 const MAX_SENTENCE_CHARS = 280;
-/** Legends often take a long sentence to tell. */
 const MAX_FUN_FACT_CHARS = 360;
 const MAX_PER_CENTURY = 2;
 
 const YEAR = /\b(1\d{3}|20\d{2})\b/;
 const CENTURY = /\b(\d{1,2})(?:st|nd|rd|th)\s+century|\b(\d{1,2})\.\s*Jahrhundert|\bs(?:iècle|iglo|ecolo)\s+(\d{1,2})\b/i;
 
-/** The year a sentence is about (first year mentioned, or the middle of a century), or null. */
 export function sentenceYear(sentence: string): number | null {
   const year = YEAR.exec(sentence);
   if (year) return Number(year[1]);
@@ -32,10 +29,6 @@ function proseSentences(text: string, maxChars = MAX_SENTENCE_CHARS): string[] {
 
 const century = (year: number) => Math.floor(year / 100);
 
-/**
- * The place's history as a few dated sentences in chronological order, picked from the
- * article's History section (or the whole article when it has none).
- */
 export function historyTimeline(article: string, title: string): string[] {
   const history = historyText(parseSections(article));
   const dated = proseSentences(history || article)
@@ -49,8 +42,7 @@ export function historyTimeline(article: string, title: string): string[] {
     return centrality * storyBonus(s) * (words.some((w) => titleWords.has(w)) ? 1.2 : 1);
   };
 
-  // The story starts at the beginning (earliest event), then the best-scoring events, at most
-  // two per century so it spans the whole history rather than one busy decade.
+  // Earliest event first, then the best ones, at most two per century to span the whole history.
   const earliest = [...dated].sort((a, b) => a.year - b.year || a.i - b.i)[0];
   const ranked = [...dated].sort((a, b) => score(b.s) - score(a.s));
   const chosen: typeof dated = [];
@@ -67,10 +59,6 @@ export function historyTimeline(article: string, title: string): string[] {
   return chosen.sort((a, b) => a.year - b.year || a.i - b.i).map((c) => c.s);
 }
 
-/**
- * The most story-like sentence in the article (a legend, anecdote or record that makes sense
- * on its own), or '' if there is none.
- */
 export function funFact(article: string, exclude: string[] = []): string {
   const used = new Set(exclude);
   const best = proseSentences(article, MAX_FUN_FACT_CHARS)

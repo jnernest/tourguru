@@ -8,7 +8,6 @@ const EARTH_RADIUS_M = 6_371_000;
 const toRad = (deg: number): number => (deg * Math.PI) / 180;
 const toDeg = (rad: number): number => (rad * 180) / Math.PI;
 
-/** Great-circle distance in metres. */
 export function distanceMeters(a: LatLon, b: LatLon): number {
   const dLat = toRad(b.lat - a.lat);
   const dLon = toRad(b.lon - a.lon);
@@ -18,7 +17,6 @@ export function distanceMeters(a: LatLon, b: LatLon): number {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(h));
 }
 
-/** Initial bearing from `from` to `to`, degrees clockwise from north in [0, 360). */
 export function bearingDegrees(from: LatLon, to: LatLon): number {
   const φ1 = toRad(from.lat);
   const φ2 = toRad(to.lat);
@@ -30,7 +28,6 @@ export function bearingDegrees(from: LatLon, to: LatLon): number {
 
 export type Direction = 'ahead' | 'right' | 'behind' | 'left';
 
-/** Where a place at `bearing` lies for someone walking towards `heading`. */
 export function relativeDirection(bearing: number, heading: number): Direction {
   const signed = ((bearing - heading + 540) % 360) - 180; // (-180, 180], positive = clockwise = right
   const abs = Math.abs(signed);
@@ -39,7 +36,6 @@ export function relativeDirection(bearing: number, heading: number): Direction {
   return signed > 0 ? 'right' : 'left';
 }
 
-/** Smallest absolute difference between two headings, in [0, 180]. */
 export function angleDifference(a: number, b: number): number {
   const diff = Math.abs(a - b) % 360;
   return diff > 180 ? 360 - diff : diff;

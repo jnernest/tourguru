@@ -7,7 +7,6 @@ import type { PoiSource } from './types';
 
 const VIENNA = { lat: 48.1845, lon: 16.3122 };
 
-// Schönbrunn: English has the palace; German has the palace too (same Wikidata id) plus more.
 const EN = [poiNorth('Q131330', 135, { title: 'Schönbrunn Palace', lang: 'en' })];
 const DE = [
   poiNorth('Q131330', 135, { title: 'Schloss Schönbrunn', lang: 'de' }),

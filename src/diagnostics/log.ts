@@ -1,7 +1,3 @@
-/**
- * In-memory diagnostic log, shared from the app via the system share sheet so problems on the
- * phone can be debugged without a USB cable. Never holds API keys; coordinates are rounded.
- */
 export type LogLevel = 'info' | 'warn' | 'error';
 
 export interface LogEntry {
@@ -30,7 +26,7 @@ export function errorText(e: unknown): string {
   return String(e);
 }
 
-/** ~100 m precision: enough to see which places were in range, not where someone lives. */
+// ~100 m precision: enough to see which places were in range, not where someone lives.
 export function roundedCoords(lat: number, lon: number): string {
   return `${lat.toFixed(3)},${lon.toFixed(3)}`;
 }

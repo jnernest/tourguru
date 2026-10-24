@@ -43,7 +43,6 @@ function setup(pois: Poi[], { canTranslate = false, autoDepth }: { canTranslate?
     onChange: vi.fn(),
   };
   const controller = new GuideController(deps, 'en');
-  /** Two fixes at the same spot = one stable reading. */
   const settleAt = async (metresNorth: number) => {
     await controller.onLocation(fixAt(metresNorth));
     await controller.onLocation(fixAt(metresNorth));

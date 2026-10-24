@@ -1,15 +1,11 @@
 import { contentWords, proseOnly, splitSentences, stripParentheticals } from '../text/sentences';
 import { storyBonus } from '../text/storyCues';
 
-/** Roughly 30–40 s of speech. */
 export const TARGET_CHARS = 450;
 export const MAX_SENTENCES = 4;
-/** Later sections (references, see-also, long lists) add noise, not substance. */
 const MAX_INPUT_CHARS = 8_000;
-/** Filters fragments ("Ibid.", "See below.") from later sentences; the first is always kept. */
 const MIN_SENTENCE_CHARS = 10;
 const MAX_SENTENCE_CHARS = 350;
-/** Sentences shorter than this get proportionally less weight. */
 const FULL_WEIGHT_CHARS = 60;
 
 export function wordFrequencies(sentences: string[]): Map<string, number> {
@@ -20,23 +16,16 @@ export function wordFrequencies(sentences: string[]): Map<string, number> {
   return freq;
 }
 
-/**
- * Frequency-based extractive score: sentences built from the article's recurring words are
- * the ones about its main subject. Earlier sentences and ones naming the place get a bonus.
- */
 function scoreSentence(sentence: string, index: number, freq: Map<string, number>, titleWords: Set<string>): number {
   const words = [...new Set(contentWords(sentence))];
   if (words.length === 0) return 0;
   const centrality = words.reduce((sum, w) => sum + (freq.get(w) ?? 0), 0) / Math.sqrt(words.length);
   const mentionsPlace = words.some((w) => titleWords.has(w)) ? 1.3 : 1;
   const position = 1 / (1 + index * 0.1);
-  // Short fragments ("Fishponds were also excavated.") carry little; they win only if nothing else does.
   const substance = Math.min(1, sentence.length / FULL_WEIGHT_CHARS);
-  // Legends, records and anecdotes are what visitors remember; dry facts come second.
   return centrality * mentionsPlace * position * substance * storyBonus(sentence);
 }
 
-/** Article sentences (index 0 = the defining first sentence) with indices ranked best first. */
 function rankSentences(text: string, title: string): { sentences: string[]; ranked: { i: number }[] } {
   const sentences = splitSentences(stripParentheticals(proseOnly(text.slice(0, MAX_INPUT_CHARS))))
     .map((s) => s.trim())
@@ -49,13 +38,8 @@ function rankSentences(text: string, title: string): { sentences: string[]; rank
   return { sentences, ranked };
 }
 
-/** Longest highlight worth adding after the key facts (~10 s of speech). */
 const MAX_HIGHLIGHT_CHARS = 220;
 
-/**
- * The single most informative sentence beyond the definition, to add colour after the key
- * facts. Empty when the article has nothing substantial enough.
- */
 export function highlight(text: string, title: string): string {
   const { sentences, ranked } = rankSentences(text, title);
   const best = ranked.find(
@@ -64,10 +48,6 @@ export function highlight(text: string, title: string): string {
   return best ? sentences[best.i] : '';
 }
 
-/**
- * Picks the most informative sentences of a Wikipedia article, offline and without a model.
- * The first sentence (which defines the place) is always kept; output stays in reading order.
- */
 export function summarize(text: string, title: string): string {
   const { sentences, ranked } = rankSentences(text, title);
   if (sentences.length === 0) {

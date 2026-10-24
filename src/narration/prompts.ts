@@ -9,13 +9,9 @@ export interface NarrationPrompt {
   user: string;
 }
 
-/** Bounds per-request size: a brief narration needs the lead and a little more. */
 export const MAX_SOURCE_CHARS = 4_000;
-/** A story needs the history section; still well within free-tier request limits. */
 export const MAX_STORY_SOURCE_CHARS = 9_000;
 
-// Kept identical across requests (mode, language and place go in the user turn) so the
-// prefix stays cacheable if the prompt ever grows past the caching minimum.
 const SYSTEM_PROMPT = `You are a friendly, knowledgeable walking-tour guide talking to someone near a place right now. Your words are read aloud by text-to-speech.
 
 Rules for every answer:
@@ -51,7 +47,7 @@ function describePosition({ distanceM, direction }: NarrationContext): string {
   return `about ${Math.round(distanceM)} metres, ${where}`;
 }
 
-/** For a story, the history section comes first, so it survives the length cap. */
+// History section first, so it survives the length cap.
 function sourceFor(text: string, story: boolean): string {
   if (!story) return text.slice(0, MAX_SOURCE_CHARS);
   const history = historyText(parseSections(text));

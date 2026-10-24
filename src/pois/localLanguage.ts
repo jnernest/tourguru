@@ -1,10 +1,5 @@
 import type { LatLon } from '../geo/geo';
 
-/**
- * Wikipedia edition with the best local coverage, by ISO 3166-1 alpha-2 country code.
- * Only countries with one clearly dominant local language are listed; elsewhere the user's
- * own language is used alone.
- */
 const COUNTRY_WIKI: Record<string, string> = {
   AT: 'de', DE: 'de', LI: 'de',
   FR: 'fr', MC: 'fr', LU: 'fr',
@@ -20,16 +15,13 @@ export function countryToWikiLang(isoCountryCode: string | null | undefined): st
   return isoCountryCode ? (COUNTRY_WIKI[isoCountryCode.toUpperCase()] ?? null) : null;
 }
 
-/** Country lookup for a coordinate (reverse geocoding). Resolves null when unknown. */
 export type CountryLookup = (center: LatLon) => Promise<string | null>;
 
-/** ~11 km grid: countries don't change faster than that, and geocoding is expensive. */
 const GRID_DEG = 0.1;
 
 const gridKey = ({ lat, lon }: LatLon): string =>
   `${Math.round(lat / GRID_DEG)}:${Math.round(lon / GRID_DEG)}`;
 
-/** Local Wikipedia language for a coordinate, cached per grid cell. Never throws. */
 export function createLocalLanguageResolver(lookupCountry: CountryLookup) {
   const cache = new Map<string, string | null>();
   return async (center: LatLon): Promise<string | null> => {

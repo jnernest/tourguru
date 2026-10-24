@@ -22,22 +22,14 @@ import { openToldStore, type ToldStore } from '../storage/toldStore';
 import { expoSpeaker } from '../voice/speaker';
 import { GuideController, INITIAL_SNAPSHOT, type GuideSnapshot } from './guideController';
 
-/** How often to re-decide while the phone sends no new fixes (e.g. sitting still). */
 const REEVALUATE_MS = 5_000;
 
 const aiProvider = createAiProvider();
 export const AI_NARRATION_ENABLED = aiProvider !== null;
-/** "Gemini (gemini-3.5-flash-lite)" or null. */
 export const AI_PROVIDER_LABEL = aiProvider?.label ?? null;
-/** On-device translation; null on web and in Expo Go, where the native module is absent. */
 const translator = createMlKitTranslator();
 export const OFFLINE_TRANSLATION_AVAILABLE = translator !== null;
 
-/**
- * The configured AI (Gemini free tier, Claude, …) when there is one; otherwise, or when it
- * fails (offline, free limit reached), the on-device pipeline: Wikidata key facts, extractive
- * summary, ML Kit translation.
- */
 function createEngine(report: FallbackReporter, onTranslationFailed: (reason: string) => void): NarrationEngine {
   const loadText = createArticleLoader();
   const offline = new ExtractiveEngine({
@@ -75,16 +67,12 @@ async function openStoreOrFallback(): Promise<ToldStore> {
   }
 }
 
-/** Wires the GuideController to real GPS, Wikipedia, TTS and SQLite. */
 export function useGuide(lang: LanguageCode) {
   const [snapshot, setSnapshot] = useState<GuideSnapshot>(INITIAL_SNAPSHOT);
   const [walking, setWalking] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
-  /** Why the last narration used the plain summary instead of AI, if it did. */
   const [aiNotice, setAiNotice] = useState<string | null>(null);
-  /** Why the last on-device translation failed, shown so the cause is visible on the phone. */
   const [translationNotice, setTranslationNotice] = useState<string | null>(null);
-  /** The suggested walk, if the user asked for one. */
   const [route, setRoute] = useState<RoutePlan | null>(null);
   const controllerRef = useRef<GuideController | null>(null);
   const toldRef = useRef<ToldStore | null>(null);
@@ -99,7 +87,6 @@ export function useGuide(lang: LanguageCode) {
       toldRef.current = told;
       controllerRef.current = new GuideController(
         {
-          // Local Wikipedia (e.g. German in Vienna) merged with the user's language.
           source: createMultiLanguageSource(
             createWikipediaSource(),
             createLocalLanguageResolver(lookupCountry),
@@ -111,8 +98,6 @@ export function useGuide(lang: LanguageCode) {
           speaker: expoSpeaker,
           told,
           canTranslate: AI_NARRATION_ENABLED || OFFLINE_TRANSLATION_AVAILABLE,
-          // The AI's story is the best narration; if it fails (free limit, offline), the
-          // offline engine tells the story from the Wikipedia text instead.
           autoDepth: AI_NARRATION_ENABLED ? 'story' : 'brief',
           now: Date.now,
           onChange: setSnapshot,
@@ -139,7 +124,6 @@ export function useGuide(lang: LanguageCode) {
     void controllerRef.current?.skip();
   }, []);
 
-  /** Starts feeding fixes from `source` (real GPS or a simulation) into the controller. */
   const beginWalk = useCallback(
     async (source: (controller: GuideController) => Promise<() => void> | (() => void)) => {
       const controller = controllerRef.current;
@@ -171,7 +155,6 @@ export function useGuide(lang: LanguageCode) {
     [beginWalk],
   );
 
-  /** Replays a walk through Munich's old town; pauses while the guide is talking. */
   const startSimulated = useCallback(
     () =>
       beginWalk((controller) =>
@@ -184,16 +167,13 @@ export function useGuide(lang: LanguageCode) {
   );
 
   const skip = useCallback(() => void controllerRef.current?.skip(), []);
-  /** Narrates `poiId`, or the best untold place nearby when omitted. */
   const tellAbout = useCallback((poiId?: string) => void controllerRef.current?.tellAbout(poiId), []);
-  /** History and a fun fact about the place on the card. */
   const tellMore = useCallback(() => void controllerRef.current?.tellMore(), []);
   const resetHistory = useCallback(() => {
     void toldRef.current?.clear().then(() => controllerRef.current?.refreshDiscovery());
   }, []);
   const isTold = useCallback((poiId: string) => controllerRef.current?.isTold(poiId) ?? false, []);
 
-  /** Plans a short walk past the best places around the user that they have not heard yet. */
   const planWalk = useCallback(() => {
     const controller = controllerRef.current;
     const position = controller?.state.position;

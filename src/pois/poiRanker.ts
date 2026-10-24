@@ -2,14 +2,12 @@ import { angleDifference, bearingDegrees, distanceMeters, type LatLon } from '..
 import type { Poi } from './types';
 
 export interface Position extends LatLon {
-  /** Direction of travel in degrees, or null when standing still / unknown. */
   heading: number | null;
 }
 
 export interface RankedPoi {
   poi: Poi;
   distanceM: number;
-  /** True when the place lies roughly in the direction the user is walking. */
   ahead: boolean;
   score: number;
 }
@@ -18,7 +16,6 @@ const AHEAD_CONE_DEG = 45;
 const PROXIMITY_WEIGHT = 0.6;
 const RICHNESS_WEIGHT = 0.25;
 const AHEAD_WEIGHT = 0.15;
-/** Articles of ~100 kB and above count as maximally rich. */
 const RICHNESS_LOG_CAP = 5;
 
 function richness(articleLength: number): number {
@@ -32,7 +29,6 @@ function isAhead(position: Position, poi: Poi): boolean {
   return angleDifference(bearingDegrees(position, poi), position.heading) <= AHEAD_CONE_DEG;
 }
 
-/** Scores every POI within `radiusM`, best first. */
 export function rankPois(pois: Poi[], position: Position, radiusM: number): RankedPoi[] {
   return pois
     .map((poi) => {

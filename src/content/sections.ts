@@ -1,14 +1,11 @@
-/** A section of a plain-text Wikipedia extract fetched with exsectionformat=wiki. */
 export interface Section {
   heading: string;
-  /** 2 for "== H ==", 3 for "=== H ===", …; 1 for the lead before the first heading. */
   level: number;
   text: string;
 }
 
 const HEADING = /^(={2,6})\s*(.+?)\s*\1\s*$/;
 
-/** "History" in the supported languages, plus common variants ("Baugeschichte", "Historique"). */
 const HISTORY_HEADING = /histor|geschicht|histoire|historia|storia|इतिहास/i;
 
 export function parseSections(text: string): Section[] {
@@ -24,7 +21,6 @@ export function parseSections(text: string): Section[] {
   return sections;
 }
 
-/** The article's history section including its subsections ("=== 18th century ==="), or ''. */
 export function historyText(sections: Section[]): string {
   const start = sections.findIndex((s) => s.level >= 2 && HISTORY_HEADING.test(s.heading));
   if (start === -1) return '';

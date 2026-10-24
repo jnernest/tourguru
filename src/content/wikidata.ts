@@ -2,11 +2,9 @@ import { factPhrase, type FactKind } from '../i18n/factPhrases';
 import type { LanguageCode } from '../i18n/languages';
 import { WIKIMEDIA_HEADERS, type FetchLike } from '../pois/wikipediaSource';
 
-/** What a guide would say about a place, from Wikidata, already in the user's language. */
 export interface EntityText {
   label: string | null;
   description: string | null;
-  /** Spoken key facts, e.g. "Built in 1638." — at most MAX_FACTS. */
   facts: string[];
 }
 
@@ -16,17 +14,11 @@ interface FactSpec {
   prop: string;
   source: FactSource;
   maxValues: number;
-  /** Only these values are worth saying (entity sources only). */
   allowed?: ReadonlySet<string>;
 }
 
-/**
- * UNESCO World Heritage (Q9259) and part of one (Q43113623). Regional registers ("Listed
- * objects in Austria", "architectural heritage monument in Bavaria") are not worth saying.
- */
 const WORLD_HERITAGE = new Set(['Q9259', 'Q43113623']);
 
-/** In speaking order. Wikidata property ids: https://www.wikidata.org/wiki/Property:P571 etc. */
 const FACT_SPECS: FactSpec[] = [
   { kind: 'built', prop: 'P571', source: 'year', maxValues: 1 },
   { kind: 'opened', prop: 'P1619', source: 'year', maxValues: 1 },
@@ -38,7 +30,6 @@ const FACT_SPECS: FactSpec[] = [
   { kind: 'namedAfter', prop: 'P138', source: 'entity', maxValues: 1 },
 ];
 export const MAX_FACTS = 4;
-/** Wikidata time precision: 9 = year. Coarser (decade, century) reads badly as a year. */
 const YEAR_PRECISION = 9;
 const METRE_UNIT = /\/Q11573$/;
 const WIKIDATA_ID = /^Q\d+$/;
@@ -60,7 +51,6 @@ interface EntitiesResponse {
   entities?: Record<string, Entity>;
 }
 
-/** A fact before entity ids are resolved to names. */
 interface RawFact {
   kind: FactKind;
   values: ({ entityId: string } | { text: string })[];
@@ -97,7 +87,6 @@ export function extractRawFacts(claims: Record<string, Claim[]>): RawFact[] {
   })).filter((f) => f.values.length > 0);
 }
 
-/** "Baroque" and "baroque architecture" say the same thing; keep the first. */
 function dropOverlapping(names: string[]): string[] {
   return names.filter(
     (name, i) => !names.slice(0, i).some((earlier) => earlier.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(earlier.toLowerCase())),
@@ -122,11 +111,6 @@ export function formatFacts(raw: RawFact[], labels: Map<string, string>, lang: L
 const pickLabel = (entity: Entity | undefined, lang: string): string | null =>
   entity?.labels?.[lang]?.value ?? entity?.labels?.en?.value ?? null;
 
-/**
- * Name, one-line description and key facts of a place from Wikidata, in `lang`. Covers many
- * places that have no Wikipedia article in that language. Null without a Wikidata id, when
- * there is nothing to say, or on any failure.
- */
 export function createEntityDescriber(fetchFn: FetchLike = fetch) {
   const getEntities = async (ids: string[], lang: string, props: string): Promise<Record<string, Entity>> => {
     const res = await fetchFn(buildEntityUrl(ids, lang, props), { headers: WIKIMEDIA_HEADERS });

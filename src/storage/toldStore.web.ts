@@ -1,7 +1,6 @@
 import type { ToldStore } from './toldStore';
 
-// Web build only (Metro picks *.web.ts for web). expo-sqlite on web needs WASM bundling and
-// COOP/COEP headers; localStorage is plenty for a list of place ids.
+// expo-sqlite on web needs WASM and COOP/COEP headers; localStorage is plenty here.
 
 export type { ToldStore } from './toldStore';
 
